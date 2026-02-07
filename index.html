@@ -1,206 +1,215 @@
+[ <a href="fallback.html" style="color: #aaa; font-size: 10px; text-decoration: none; position: absolute; top: 5px; right: 10px; z-index: 10000;">Low Bandwidth / Dillo Mode</a> ]
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nebania OS - Ultimate Virtual Desktop</title>
+    <link rel="icon" type="image/png" href="images/nebula_favi.png">
+    <title>Nebania HQ - Central Command</title>
     <style>
-        /* FRUTIGER AERO CORE SPECIFICATIONS */
+        /* --- FRUTIGER AERO AESTHETIC ENGINE --- */
         :root {
-            --glass: rgba(255, 255, 255, 0.3);
-            --glass-thick: rgba(255, 255, 255, 0.8);
-            --vista-blue: #0078d7;
-            --font-ui: 'Segoe UI', 'Frutiger', 'Calibri', sans-serif;
-            --gloss-shine: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 51%, rgba(255,255,255,0.2) 100%);
+            --glass-surface: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --aero-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            --text-glow: 0 0 10px rgba(255, 255, 255, 0.8);
+            --nebula-blue: #00a8ff;
+            --leaf-green: #8cc63f;
         }
 
         body, html {
             margin: 0;
             padding: 0;
-            height: 100vh;
             width: 100vw;
+            height: 100vh;
             overflow: hidden;
-            font-family: var(--font-ui);
-            background: url('https://preview.redd.it/frutiger-aero-wallpaper-4k-upscaling-turquoise-v0-bdvrspnnio7d1.png?auto=webp&s=beff93ac317739e499bc448039f482c5b6be7403') no-repeat center center fixed;
-            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            user-select: none;
         }
 
-        #desktop {
+        /* --- BACKGROUND STACK --- */
+        .bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            position: relative;
+            object-fit: cover;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            z-index: 0;
+        }
+
+            .bg-layer.active {
+                opacity: 1;
+            }
+
+        #vignette {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+        }
+
+        /* --- UI: ACTION RAIL (Left) --- */
+        #action-rail {
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 50;
+            width: 260px;
+            perspective: 1000px;
+        }
+
+        .aero-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.5), inset 0 20px 20px rgba(255,255,255,0.4);
+            backdrop-filter: blur(15px);
+            transition: transform 0.3s, opacity 0.5s;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+            .aero-panel.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .aero-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            margin-top: 10px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            background: linear-gradient(180deg, #5ac8fa 0%, #007aff 50%, #005ecb 100%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: 0.2s;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+            .aero-btn:hover {
+                transform: scale(1.05);
+                filter: brightness(1.1);
+            }
+
+            .aero-btn:active {
+                transform: scale(0.95);
+            }
+
+        .btn-green {
+            background: linear-gradient(180deg, #aaffaa 0%, #34c759 50%, #248a3d 100%);
+        }
+
+        .btn-orange {
+            background: linear-gradient(180deg, #ffdca8 0%, #ff9500 50%, #c47200 100%);
+        }
+
+        .btn-purple {
+            background: linear-gradient(180deg, #e0c8ff 0%, #af52de 50%, #802aa3 100%);
+        }
+        /* Nebula OS Download Special Color */
+        .btn-nebula {
+            background: linear-gradient(180deg, #00fff2 0%, #00a8ff 50%, #007aff 100%);
+        }
+
+        /* --- CREDITS WINDOW STYLING --- */
+        #credits-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: 0.3s;
         }
 
-        /* AERO GLASS WINDOW */
-        .window {
-            width: 1000px;
-            height: 700px;
-            background: var(--glass);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.8);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            animation: windowOpen 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        .credits-hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        @keyframes windowOpen {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* GLOSSY TITLE BAR */
-        .title-bar {
-            height: 40px;
-            padding: 0 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--gloss-shine), rgba(255,255,255,0.4);
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .title-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            color: #1a3a5a;
-            text-shadow: 0 1px 1px white;
-        }
-
-        .btn-controls {
-            display: flex;
-            gap: 6px;
-        }
-
-        .win-btn {
-            width: 32px;
-            height: 20px;
-            border-radius: 3px;
-            border: 1px solid rgba(0,0,0,0.3);
-            cursor: pointer;
-        }
-
-        .win-close {
-            background: linear-gradient(#ff6b6b, #c00);
-            box-shadow: inset 0 1px rgba(255,255,255,0.4);
-        }
-
-        /* SYSTEM LAYOUT */
-        .app-container {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 200px;
-            background: rgba(255,255,255,0.25);
-            border-right: 1px solid rgba(0,0,0,0.1);
-            padding: 15px;
-        }
-
-        .nav-item {
-            display: block;
-            padding: 10px 15px;
-            color: #0b1829;
-            text-decoration: none;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            font-size: 14px;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-
-            .nav-item:hover {
-                background: rgba(255,255,255,0.5);
-                border-color: rgba(255,255,255,0.8);
-                transform: scale(1.02);
-            }
-
-            .nav-item.active {
-                background: linear-gradient(to right, #2a6cc3, #4faaff);
-                color: white;
-                font-weight: bold;
-                box-shadow: 0 4px 12px rgba(0,100,200,0.3);
-            }
-
-        .main-view {
-            flex: 1;
-            background: var(--glass-thick);
-            margin: 10px;
+        .credits-window {
+            width: 350px;
+            background: linear-gradient(180deg, #f0f0f0 0%, #dcdcdc 100%);
+            border: 1px solid #777;
             border-radius: 8px;
-            padding: 30px;
-            overflow-y: auto;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
         }
 
-        /* PAGE ANIMATION */
-        .page {
-            display: none;
-        }
-
-            .page.active {
-                display: block;
-                animation: fadeIn 0.4s ease;
-            }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* FRUTIGER BUTTONS */
-        .glass-btn {
-            display: inline-block;
-            padding: 14px 28px;
-            background: linear-gradient(180deg, #6fc2ff 0%, #0077cc 50%, #005ea1 51%, #0077cc 100%);
-            color: white;
-            border-radius: 40px;
-            text-decoration: none;
+        .window-header {
+            background: linear-gradient(180deg, #ffffff 0%, #ebebeb 100%);
+            padding: 8px 12px;
+            font-size: 12px;
             font-weight: bold;
-            border: 1px solid #004a80;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-            box-shadow: inset 0 1px 2px rgba(255,255,255,0.6), 0 5px 15px rgba(0,0,0,0.2);
-            transition: 0.2s;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #aaa;
         }
 
-            .glass-btn:hover {
-                filter: brightness(1.1);
-                transform: translateY(-2px);
-            }
-
-        /* NEBULA FIXED POSITION */
-        #nebula-entity {
-            position: fixed;
-            bottom: 60px;
-            right: 40px;
-            width: 170px;
-            z-index: 1000;
-            text-align: center;
+        .window-body {
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
         }
 
-        .neb-float {
-            animation: float 5s ease-in-out infinite;
+        .close-btn {
+            background: #e81123;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        /* --- NEBULA STAGE --- */
+        #nebula-stage {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 600px;
+            z-index: 20;
+            pointer-events: auto;
+        }
+
+        #neb-sprite {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 40px rgba(100, 200, 255, 0.4));
+            transition: transform 0.2s, filter 0.3s;
+            cursor: help;
+        }
+
+        .anim-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .anim-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .anim-angry {
+            filter: drop-shadow(0 0 50px red) !important;
         }
 
         @keyframes float {
@@ -209,197 +218,441 @@
             }
 
             50% {
-                transform: translateY(-20px);
+                transform: translateY(-15px);
             }
         }
 
-        .bubble {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 13px;
-            color: #222;
-            border: 1px solid #0078d7;
-            margin-bottom: 15px;
-            position: relative;
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d(-2px, 0, 0);
+            }
+
+            20%, 80% {
+                transform: translate3d(4px, 0, 0);
+            }
+
+            30%, 50%, 70% {
+                transform: translate3d(-6px, 0, 0);
+            }
+
+            40%, 60% {
+                transform: translate3d(6px, 0, 0);
+            }
+        }
+
+        #speech-bubble {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 100%);
+            border: 2px solid #3fa9f5;
+            border-radius: 20px;
+            padding: 15px 25px;
+            min-width: 250px;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             opacity: 0;
-            transition: 0.3s;
-            transform: scale(0.9);
+            transition: opacity 0.4s, top 0.4s;
+            pointer-events: none;
         }
 
-            .bubble.show {
+            #speech-bubble.visible {
                 opacity: 1;
-                transform: scale(1);
+                top: 50px;
             }
 
-        /* TASKBAR */
+        /* --- TASKBAR --- */
         #taskbar {
             position: fixed;
             bottom: 0;
             width: 100%;
-            height: 42px;
-            background: linear-gradient(to bottom, rgba(0,40,80,0.8), rgba(0,20,40,0.9));
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255,255,255,0.2);
+            height: 48px; /* Classic Win7 height */
             display: flex;
             align-items: center;
-            padding: 0 12px;
-            z-index: 1001;
+            justify-content: space-between;
+            /* 1. Increased padding to fix your clock cutoff issue */
+            padding: 0 35px;
+            box-sizing: border-box;
+            z-index: 100;
+            /* 2. Aero Glass Background */
+            background: linear-gradient( to bottom, rgba(255, 255, 255, 0.35) 0%, /* Top highlight */
+            rgba(255, 255, 255, 0.15) 2%, /* Inner glow */
+            rgba(10, 30, 60, 0.4) 50%, /* Mid body */
+            rgba(0, 0, 0, 0.3) 100% /* Bottom shadow */
+            );
+            /* 3. The "Frost" & Blur Effect */
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            /* 4. Glass Borders */
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+            /* 5. Subtle Shadow for depth */
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 -1px 10px rgba(0, 0, 0, 0.2);
         }
+
+            /* Optional: Add a subtle 'shine' overlay */
+            #taskbar::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 50%;
+                background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+                pointer-events: none;
+            }
 
         .start-btn {
-            width: 34px;
-            height: 34px;
-            background: radial-gradient(circle at 30% 30%, #aaffaa, #008800);
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #88ff88 0%, #00aa00 100%);
             border: 2px solid white;
-            box-shadow: 0 0 12px rgba(0,255,0,0.4);
+            box-shadow: 0 0 15px rgba(0,255,0,0.6);
             cursor: pointer;
+            transition: 0.3s;
         }
 
-        pre {
-            background: #eef;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 5px solid #0078d7;
-            font-family: monospace;
+        #nav-menu {
+            position: absolute;
+            bottom: 65px;
+            left: 10px;
+            width: 240px;
+            background: rgba(240, 245, 255, 0.95);
+            border: 1px solid #7abaff;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            display: none;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .credits-trigger {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            margin-right: 15px;
+            text-transform: uppercase;
+        }
+
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s;
+        }
+
+        .splash-btn {
+            padding: 20px 60px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background: transparent;
+            border: 2px solid white;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.3s;
         }
     </style>
 </head>
 <body>
 
-    <div id="desktop">
-
-        <div class="window" id="main-win">
-            <div class="title-bar">
-                <div class="title-label">
-                    <img src="images/nebula_logo3.png" height="20" style="border-radius: 50%;">
-                    Nebula OS - Ultimate Desktop
-                </div>
-                <div class="btn-controls">
-                    <div class="win-btn" style="background:#ddd;"></div>
-                    <div class="win-btn" style="background:#eee;"></div>
-                    <div class="win-btn win-close" onclick="nebulaSpeak('Shutdown sequence aborted.')"></div>
-                </div>
-            </div>
-
-            <div class="app-container">
-                <div class="sidebar">
-                    <a href="#" class="nav-item active" onclick="nav('home', this)">System Status</a>
-                    <a href="#" class="nav-item" onclick="nav('downloads', this)">Repository</a>
-                    <a href="#" class="nav-item" onclick="nav('linklang', this)">Link-Lang</a>
-                    <a href="#" class="nav-item" onclick="nav('kotel', this)">Kotel Manager</a>
-                    <a href="#" class="nav-item" onclick="nav('discord', this)">Discord Uplink</a>
-                </div>
-
-                <div class="main-view">
-                    <div id="home" class="page active">
-                        <h1 style="color:#0055aa; margin-top:0;">System Operational</h1>
-                        <p>Welcome to the Nebania core environment. All systems are reporting peak efficiency.</p>
-                        <div style="background:rgba(0,120,255,0.05); border:1px solid #abd; padding:20px; border-radius:10px;">
-                            <strong>Visual Engine:</strong> Frutiger Aero v3<br>
-                            <strong>Assistant Status:</strong> Online<br>
-                            <strong>Kernel:</strong> Stable-LTS
-                        </div>
-                    </div>
-
-                    <div id="downloads" class="page">
-                        <h2>Image Repository</h2>
-                        <p>Download the official Nebula OS image for Raspberry Pi 5.</p>
-                        <div style="margin:20px 0; padding:15px; background:rgba(0,0,0,0.05); border-radius:8px;">
-                            <strong>Default User:</strong> root<br>
-                            <strong>Default Password:</strong> Nebula!
-                        </div>
-                        <a href="https://download1581.mediafire.com/iqugq4xvaamg0rwPnXKzLd8JZbF2PO3lKdbORraVo8G3IIEbVXZG0lrRTVsIAXxCnztxBwaJFDhRS0am5PDbhKtn4ZXdF2PNKRxi6QGN_0G2yzFVESSbt0iU_WF2KIDf7rspYPgI5WG-n6xzlkxEuS5GGJ7Myo8-ebZLmKTo64O6jw/y5uxvsh8h1ifns0/nebulaARM64_v1.img.xz" class="glass-btn">Download nebulaARM64_v1.img.xz</a>
-                    </div>
-
-                    <div id="linklang" class="page">
-                        <h2>Link-Lang Compiler</h2>
-                        <p>Low-level logic for high-level minds.</p>
-                        <pre>
-app Hello 
-    window Main 
-        title "Hello"   # window title
-    
-
-    func greet 
-        print "Hello from Link"   # greeting
-    
-
-    connect Main.onLoad -> greet}</pre>
-                        <a href="https://github.com/Pilot0253/link-lang" target="_blank" class="glass-btn">View Documentation</a>
-                    </div>
-
-                    <div id="kotel" class="page">
-                        <h2>Kotel Package Manager</h2>
-                        <p>Secure rolling release repository for ARM64.</p>
-                        <a href="https://github.com/tohar777/kotel" target="_blank" class="glass-btn" style="background: linear-gradient(180deg, #5cce5c, #1a7c1a);">Access Kotel Repo</a>
-                    </div>
-
-                    <div id="discord" class="page">
-                        <h2>Developer Uplink</h2>
-                        <p>Connect with the dev team and the Nebania community.</p>
-                        <a href="https://discord.gg/C6S6kn7dNz" target="_blank" class="glass-btn" style="background:#7289da;">Open Discord Channel</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="nebula-entity">
-            <div class="bubble" id="neb-bubble">Ready for input.</div>
-            <div class="neb-float">
-                <img src="images/nebula_logo3.png" id="neb-img" style="width:100%; cursor:pointer;" onclick="poke()">
-            </div>
-        </div>
-
-        <div id="taskbar">
-            <div class="start-btn" onclick="nebulaSpeak('Start Menu requires Admin level 5.')"></div>
-            <div style="color:white; font-size:13px; margin-left:auto; font-weight:lighter;" id="clock">12:00:00 PM</div>
-        </div>
-
+    <div id="splash">
+        <h1 style="color:white; font-size: 3rem; text-shadow: 0 0 20px cyan;">NEBANIA HQ</h1>
+        <p style="color:#aaa; margin-top:-20px;">v5.0 "Magnum Opus" Build</p>
+        <button class="splash-btn" onclick="startExperience()">INITIALIZE</button>
     </div>
 
+    <img src="images/lobby.jpg" class="bg-layer" id="bg-lobby">
+    <img src="images/hall.jpg" class="bg-layer" id="bg-hall">
+    <img src="images/foodcourt.jpg" class="bg-layer" id="bg-foodcourt">
+    <img src="images/museum.jpg" class="bg-layer" id="bg-museum">
+    <div id="vignette"></div>
+
+    <div id="action-rail"></div>
+
+    <div id="nebula-stage">
+        <div id="speech-bubble">System Initialized.</div>
+        <img src="images/nebula_logo3.png" id="neb-sprite" class="anim-float" onclick="pokeNebula()">
+    </div>
+
+    <div id="credits-overlay" class="credits-hidden">
+        <div class="credits-window">
+            <div class="window-header">
+                <span>System Properties</span>
+                <button onclick="toggleCredits(false)" class="close-btn">X</button>
+            </div>
+            <div class="window-body">
+                <h2 style="margin:0; color:#005ecb;">Nebania HQ</h2>
+                <hr>
+                <p><strong>Lead Architect:</strong> Pilot0253</p>
+                <p><strong>Visual Artist:</strong> StarswirlTheOne</p>
+                <p><strong>Core Development:</strong> lowisfigo17, tohar_xp</p>
+                <hr>
+                <button class="aero-btn" onclick="toggleCredits(false)">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="taskbar">
+        <div class="start-btn" onclick="toggleMenu()"></div>
+
+        <div id="nav-menu">
+            <div style="background: #007aff; color: white; padding: 15px; font-weight: bold;">SYSTEM DIRECTORY</div>
+            <div class="nav-item" onclick="changeRoom('lobby')">📍 Main Lobby</div>
+            <div class="nav-item" onclick="changeRoom('hall')">🔊 Community Hall</div>
+            <div class="nav-item" onclick="changeRoom('foodcourt')">☕ Food Court</div>
+            <div class="nav-item" onclick="changeRoom('museum')">🏛️ The Museum</div>
+        </div>
+
+        <div style="display: flex; align-items: center;">
+            <button class="credits-trigger" onclick="toggleCredits(true)">CREDITS</button>
+            <div style="color:white; font-weight: 500;">
+                <span id="location-text" style="color:#8cc63f; font-weight:bold; margin-right: 15px;">LOBBY</span>
+                <span id="clock">00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <audio id="main-audio" loop></audio>
+
     <script>
-    const nebImg = document.getElementById('neb-img');
-    const nebBubble = document.getElementById('neb-bubble');
+        const sprites = {
+            thinking: "images/nebula_logo1.png",
+            cheerful: "images/nebula_logo2.png",
+            neutral: "images/nebula_logo3.png",
+            bow: "images/nebula_logo4.png",
+            process: "images/nebula_logo5.png",
+            poked: "images/nebula_poked.png",
+            angry: "images/nebula_dragged.png"
+        };
 
-    const sprites = {
-        neutral: "images/nebula_logo3.png",
-        thinking: "images/nebula_logo1.png",
-        poked: "images/nebula_poked.png"
-    };
+        const audioFiles = {
+            lobby: "audio/lobby.mp3",
+            hall: "audio/hall.mp3",
+            foodcourt: "audio/foodcourt.mp3",
+            museum: "audio/museum.mp3"
+        };
 
-    function nebulaSpeak(text) {
-        nebBubble.innerText = text;
-        nebBubble.classList.add('show');
-        clearTimeout(window.bt);
-        window.bt = setTimeout(() => nebBubble.classList.remove('show'), 4000);
-    }
+        const rooms = {
+            lobby: {
+                name: "MAIN LOBBY",
+                bgId: "bg-lobby",
+                audio: "lobby",
+                intro: "Welcome to Nebania HQ. Please observe security protocols.",
+                actions: `
+                        <div class="aero-panel show">
+                            <h3 style="margin:0; color:#005ecb;">Link-Lang</h3>
+                            <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">The scripting engine.</p>
+                            <button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/link-lang', 'Accessing Repository...')">View Repo</button>
+                        </div>
+                        <div class="aero-panel show">
+                            <h3 style="margin:0; color:#005ecb;">Kotel</h3>
+                            <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Package Manager.</p>
+                            <button class="aero-btn btn-purple" onclick="handleRedirect('https://github.com/tohar777/kotel', 'Fetching Kotel Data...')">View Repo</button>
+                        </div>
+                        <div class="aero-panel show">
+                            <h3 style="margin:0; color:#005ecb;">Nebula OS ARM</h3>
+                            <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">v1.0 for Raspberry Pi 5.</p>
+                            <button class="aero-btn btn-nebula" onclick="handleRedirect('https://download1581.mediafire.com/z8e8jsjmhoegJ1EG3i-4_32GHrtYN_rZWND-QjDZXVnCVso88Z71EykPkA3IgjIePl_HTQWJ55BAiig8rWUtUDNIlyZRY4xCZ6uP_uqr3-JW9KBUQH68pH2u7LlkuGlW_FcnWrjkiBf2aUAtNJnwa4sRPSZddZ4Yx8tspUDtjNo_5w/y5uxvsh8h1ifns0/nebulaARM64_v1.img.xz', 'Fetching OS Data...')">Download Image</button>
+                        </div>
+                    `
+            },
+            hall: {
+                name: "COMMUNITY HALL",
+                bgId: "bg-hall",
+                audio: "hall",
+                intro: "Uplink established. Join the conversation.",
+                actions: `
+                        <div class="aero-panel show">
+                            <h3 style="margin:0; color:#248a3d;">Discord Uplink</h3>
+                            <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Connect with other users.</p>
+                            <button class="aero-btn btn-green" onclick="handleRedirect('https://discord.gg/C6S6kn7dNz', 'Initializing Handshake...')">Join Server</button>
+                        </div>
+                    `
+            },
+            foodcourt: {
+                name: "FOOD COURT",
+                bgId: "bg-foodcourt",
+                audio: "foodcourt",
+                intro: "The Cyber Cafe. Take a break.",
+                actions: `
+                        <div class="aero-panel show">
+                            <h3 style="margin:0; color:#c47200;">Coffee Break</h3>
+                            <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Fuel the OS.</p>
+                            <button class="aero-btn btn-orange" onclick="buyCoffee()">Buy Nebula a Coffee</button>
+                        </div>
+                    `
+            },
+            museum: {
+                name: "THE MUSEUM",
+                bgId: "bg-museum",
+                audio: "museum",
+                intro: "Archives loaded. Please do not touch the exhibits.",
+                actions: `
+                        <div class="aero-panel show">
+                            <h3 style="margin:0; color:#802aa3;">Random Exhibit</h3>
+                            <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Discover lost tech.</p>
+                            <button class="aero-btn btn-purple" onclick="randomExhibit()">I'm Feeling Lucky</button>
+                        </div>
+                    `
+            }
+        };
 
-    function poke() {
-        nebImg.src = sprites.poked;
-        nebulaSpeak("Protocol check: No poking the OS.");
-        setTimeout(() => nebImg.src = sprites.neutral, 1500);
-    }
+        let currentRoom = 'lobby';
+        let pokeCount = 0;
+        let isAngry = false;
+        let audioEl = document.getElementById('main-audio');
+        let spriteEl = document.getElementById('neb-sprite');
+        let speechEl = document.getElementById('speech-bubble');
+        let railEl = document.getElementById('action-rail');
 
-    function nav(pageId, el) {
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
+        function startExperience() {
+            document.getElementById('splash').style.opacity = '0';
+            setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 1000);
+            playAudio('lobby');
+            document.getElementById('bg-lobby').classList.add('active');
+            railEl.innerHTML = rooms.lobby.actions;
+            setSprite(sprites.bow);
+            speak("Welcome to Nebania HQ.");
+            setTimeout(() => {
+                setSprite(sprites.process);
+                speak("I will work hard to assist you!");
+                setTimeout(() => {
+                    setSprite(sprites.neutral);
+                    speak("Systems Online. Awaiting input.");
+                }, 2500);
+            }, 2000);
+        }
 
-        nebImg.src = sprites.thinking;
-        nebulaSpeak("Loading " + pageId + "...");
-        setTimeout(() => nebImg.src = sprites.neutral, 1000);
-    }
+        function changeRoom(roomId) {
+            if (roomId === currentRoom) return;
+            toggleMenu(false);
+            currentRoom = roomId;
+            document.getElementById('location-text').innerText = rooms[roomId].name;
+            document.querySelectorAll('.bg-layer').forEach(el => el.classList.remove('active'));
+            document.getElementById(rooms[roomId].bgId).classList.add('active');
+            playAudio(rooms[roomId].audio);
+            railEl.style.opacity = '0';
+            setTimeout(() => {
+                railEl.innerHTML = rooms[roomId].actions;
+                railEl.style.opacity = '1';
+                document.querySelectorAll('.aero-panel').forEach(p => {
+                    p.classList.remove('show');
+                    void p.offsetWidth;
+                    p.classList.add('show');
+                });
+            }, 300);
+            if (!isAngry) {
+                setSprite(sprites.thinking);
+                speak("Loading " + rooms[roomId].name + "...");
+                setTimeout(() => { setSprite(sprites.neutral); speak(rooms[roomId].intro); }, 1000);
+            }
+        }
 
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleTimeString();
-    }, 1000);
+        function toggleCredits(show) {
+            const overlay = document.getElementById('credits-overlay');
+            if (show) {
+                overlay.classList.remove('credits-hidden');
+                setSprite(sprites.thinking);
+                speak("Accessing system properties...");
+            } else {
+                overlay.classList.add('credits-hidden');
+                setSprite(sprites.neutral);
+            }
+        }
 
-    // Initial greeting
-    setTimeout(() => nebulaSpeak("Nebula OS Booted. Hello, User."), 1000);
+        function handleRedirect(url, msg) {
+            if (isAngry) { speak("I AM NOT IN THE MOOD FOR REDIRECTS."); return; }
+            setSprite(sprites.thinking);
+            speak(msg);
+            setTimeout(() => { window.open(url, '_blank'); setSprite(sprites.neutral); speak("Redirect complete."); }, 1500);
+        }
+
+        function buyCoffee() {
+            if (isAngry) {
+                isAngry = false; pokeCount = 0; setSprite(sprites.cheerful);
+                spriteEl.classList.remove('anim-angry');
+                speak("Oh! Coffee! I forgive you! ❤️");
+                setTimeout(() => setSprite(sprites.neutral), 3000);
+            } else {
+                setSprite(sprites.cheerful);
+                speak("Thank you so much! It's delicious! ☕");
+                setTimeout(() => setSprite(sprites.neutral), 3000);
+            }
+        }
+
+        function randomExhibit() { handleRedirect('https://en.wikipedia.org/wiki/Special:Random', 'Searching Archives...'); }
+
+        function pokeNebula() {
+            pokeCount++;
+            spriteEl.classList.remove('anim-float');
+            spriteEl.classList.add('anim-shake');
+            setTimeout(() => { spriteEl.classList.remove('anim-shake'); spriteEl.classList.add('anim-float'); }, 500);
+            if (pokeCount < 5) {
+                setSprite(sprites.poked); speak("Hey! Stop that!");
+                setTimeout(() => { if (!isAngry) setSprite(sprites.neutral); }, 1500);
+            } else if (pokeCount < 10) {
+                setSprite(sprites.poked); speak("I'm warning you...");
+                setTimeout(() => { if (!isAngry) setSprite(sprites.neutral); }, 1500);
+            } else {
+                isAngry = true; setSprite(sprites.angry); spriteEl.classList.add('anim-angry');
+                speak("SYSTEM CRITICAL: LIMIT REACHED. 💢");
+                setTimeout(() => {
+                    if (isAngry) {
+                        isAngry = false; pokeCount = 0; spriteEl.classList.remove('anim-angry');
+                        setSprite(sprites.process); speak("Cooling down systems...");
+                        setTimeout(() => setSprite(sprites.neutral), 2000);
+                    }
+                }, 5000);
+            }
+        }
+
+        function setSprite(src) { const img = new Image(); img.src = src; img.onload = () => { spriteEl.src = src; }; }
+
+        function speak(text) {
+            speechEl.innerText = text;
+            speechEl.classList.add('visible');
+            if (window.speechTimer) clearTimeout(window.speechTimer);
+            window.speechTimer = setTimeout(() => { speechEl.classList.remove('visible'); }, 4000);
+        }
+
+        function playAudio(trackName) {
+            let fadeOut = setInterval(() => {
+                if (audioEl.volume > 0.1) { audioEl.volume -= 0.1; }
+                else {
+                    clearInterval(fadeOut);
+                    audioEl.src = audioFiles[trackName];
+                    audioEl.play().catch(e => console.log("Interruption noted."));
+                    let fadeIn = setInterval(() => {
+                        if (audioEl.volume < 0.9) { audioEl.volume += 0.1; }
+                        else { clearInterval(fadeIn); }
+                    }, 50);
+                }
+            }, 50);
+        }
+
+        function toggleMenu(forceState) {
+            const menu = document.getElementById('nav-menu');
+            menu.style.display = (forceState === undefined) ? (menu.style.display === 'block' ? 'none' : 'block') : (forceState ? 'block' : 'none');
+        }
+
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, 1000);
     </script>
-
 </body>
 </html>
