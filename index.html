@@ -28,6 +28,12 @@
         }
 
         /* --- BACKGROUND STACK --- */
+        #main-content {
+            width: 100%;
+            height: 100%;
+            transition: filter 0.5s ease;
+        }
+
         .bg-layer {
             position: absolute;
             top: 0;
@@ -43,6 +49,21 @@
             .bg-layer.active {
                 opacity: 1;
             }
+
+        /* Bloom Effect for Transitions */
+        .bloom-effect {
+            animation: bloom 1.5s ease-out forwards;
+        }
+
+        @keyframes bloom {
+            0% {
+                filter: brightness(3) blur(20px);
+            }
+
+            100% {
+                filter: brightness(1) blur(0px);
+            }
+        }
 
         #vignette {
             position: absolute;
@@ -122,18 +143,108 @@
         .btn-purple {
             background: linear-gradient(180deg, #e0c8ff 0%, #af52de 50%, #802aa3 100%);
         }
-        /* Nebula OS Download Special Color */
+
         .btn-nebula {
             background: linear-gradient(180deg, #00fff2 0%, #00a8ff 50%, #007aff 100%);
         }
 
-        /* --- CREDITS WINDOW STYLING --- */
+        /* --- COMPREHENSIVE OVERLAY --- */
+        #system-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px) saturate(180%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+            #system-overlay.visible {
+                display: flex;
+                opacity: 1;
+            }
+
+        .overlay-content {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .overlay-title {
+            color: #007aff;
+            font-size: 2.5rem;
+            font-weight: 200;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(0,168,255,0.3);
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .nav-card {
+            background: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.6);
+            padding: 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+            .nav-card:hover {
+                background: white;
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0,122,255,0.2);
+            }
+
+            .nav-card h3 {
+                margin: 0;
+                color: #333;
+            }
+
+        .return-btn {
+            margin-top: 50px;
+            padding: 10px 40px;
+            border-radius: 30px;
+            border: 2px solid #007aff;
+            background: transparent;
+            color: #007aff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .return-btn:hover {
+                background: #007aff;
+                color: white;
+            }
+
+        /* --- TRANSITION LAYER --- */
+        #transition-white {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        /* --- CREDITS WINDOW --- */
         #credits-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.4);
             backdrop-filter: blur(5px);
-            z-index: 2000;
+            z-index: 6000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -263,47 +374,24 @@
                 opacity: 1;
                 top: 50px;
             }
-    
+
         /* --- TASKBAR --- */
         #taskbar {
             position: fixed;
             bottom: 0;
             width: 100%;
-            height: 48px; /* Classic Win7 height */
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            /* 1. Increased padding to fix your clock cutoff issue */
             padding: 0 35px;
             box-sizing: border-box;
-            z-index: 100;
-            /* 2. Aero Glass Background */
-            background: linear-gradient( to bottom, rgba(255, 255, 255, 0.35) 0%, /* Top highlight */
-            rgba(255, 255, 255, 0.15) 2%, /* Inner glow */
-            rgba(10, 30, 60, 0.4) 50%, /* Mid body */
-            rgba(0, 0, 0, 0.3) 100% /* Bottom shadow */
-            );
-            /* 3. The "Frost" & Blur Effect */
+            z-index: 6000;
+            background: linear-gradient( to bottom, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.15) 2%, rgba(10, 30, 60, 0.4) 50%, rgba(0, 0, 0, 0.3) 100% );
             backdrop-filter: blur(12px) saturate(150%);
-            -webkit-backdrop-filter: blur(12px) saturate(150%);
-            /* 4. Glass Borders */
             border-top: 1px solid rgba(255, 255, 255, 0.5);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-            /* 5. Subtle Shadow for depth */
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 -1px 10px rgba(0, 0, 0, 0.2);
         }
-
-            /* Optional: Add a subtle 'shine' overlay */
-            #taskbar::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 50%;
-                background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
-                pointer-events: none;
-            }
 
         .start-btn {
             width: 40px;
@@ -316,20 +404,6 @@
             transition: 0.3s;
         }
 
-        #nav-menu {
-            position: absolute;
-            bottom: 65px;
-            left: 10px;
-            width: 240px;
-            background: rgba(240, 245, 255, 0.95);
-            border: 1px solid #7abaff;
-            border-radius: 12px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-            display: none;
-            overflow: hidden;
-            animation: slideUp 0.3s ease;
-        }
-
         #walkman {
             position: absolute;
             bottom: 70px;
@@ -338,7 +412,7 @@
             padding: 15px;
             z-index: 1000;
             background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(200,230,255,0.4));
-            border-radius: 30px; /* Rounder for that "Soap" look */
+            border-radius: 30px;
         }
 
         .disc-container {
@@ -356,7 +430,7 @@
             height: 100%;
             border-radius: 50%;
             animation: rotateRecord 3s linear infinite;
-            animation-play-state: paused; /* Starts paused */
+            animation-play-state: paused;
         }
 
         .disc-center {
@@ -406,13 +480,11 @@
         .v-bar {
             width: 6px;
             height: 20%;
-            /* The iconic Frutiger Green-to-Blue gradient */
             background: linear-gradient(to top, #007aff, #00fff2, #8cc63f);
             border-radius: 2px 2px 0 0;
             animation: bounce 0.5s ease-in-out infinite alternate;
         }
 
-            /* Stagger the animations so they look random */
             .v-bar:nth-child(1) {
                 animation-duration: 0.4s;
             }
@@ -453,7 +525,6 @@
             }
         }
 
-        /* Stop the bouncing when the player is "paused" or loading */
         .paused .v-bar {
             animation-play-state: paused;
             height: 15% !important;
@@ -501,21 +572,65 @@
 
     <div id="splash">
         <h1 style="color:white; font-size: 3rem; text-shadow: 0 0 20px cyan;">NEBANIA HQ</h1>
-        <p style="color:#aaa; margin-top:-20px;">v5.0 "Magnum Opus" Build</p>
+        <p style="color:#aaa; margin-top:-20px;">v5.2 "Magnum Opus" Build</p>
         <button class="splash-btn" onclick="startExperience()">INITIALIZE</button>
     </div>
 
-    <img src="images/lobby.jpg" class="bg-layer" id="bg-lobby">
-    <img src="images/hall.jpg" class="bg-layer" id="bg-hall">
-    <img src="images/foodcourt.jpg" class="bg-layer" id="bg-foodcourt">
-    <img src="images/museum.jpg" class="bg-layer" id="bg-museum">
-    <div id="vignette"></div>
+    <div id="transition-white"></div>
 
-    <div id="action-rail"></div>
+    <div id="system-overlay">
+        <div class="overlay-content">
+            <h1 class="overlay-title">SYSTEM DIRECTORY</h1>
+            <div class="nav-grid">
+                <div class="nav-card" onclick="changeRoom('lobby')">
+                    <h3>📍 Main Lobby</h3>
+                    <p style="font-size: 12px; color: #666;">Central Hub</p>
+                </div>
+                <div class="nav-card" onclick="changeRoom('hall')">
+                    <h3>🔊 Community Hall</h3>
+                    <p style="font-size: 12px; color: #666;">Discord Uplink</p>
+                </div>
+                <div class="nav-card" onclick="changeRoom('foodcourt')">
+                    <h3>☕ Food Court</h3>
+                    <p style="font-size: 12px; color: #666;">Cyber Cafe</p>
+                </div>
+                <div class="nav-card" onclick="changeRoom('museum')">
+                    <h3>🏛️ The Museum</h3>
+                    <p style="font-size: 12px; color: #666;">Archives</p>
+                </div>
+            </div>
+            <button class="return-btn" onclick="toggleMenu(false)">RETURN TO AREA</button>
+        </div>
+    </div>
 
-    <div id="nebula-stage">
-        <div id="speech-bubble">System Initialized.</div>
-        <img src="images/nebula_logo3.png" id="neb-sprite" class="anim-float" onclick="pokeNebula()">
+    <div id="main-content">
+        <img src="images/lobby.jpg" class="bg-layer" id="bg-lobby">
+        <img src="images/hall.jpg" class="bg-layer" id="bg-hall">
+        <img src="images/foodcourt.jpg" class="bg-layer" id="bg-foodcourt">
+        <img src="images/museum.jpg" class="bg-layer" id="bg-museum">
+        <div id="vignette"></div>
+
+        <div id="action-rail"></div>
+
+        <div id="nebula-stage">
+            <div id="speech-bubble">System Initialized.</div>
+            <img src="images/nebula_logo3.png" id="neb-sprite" class="anim-float" onclick="pokeNebula()">
+        </div>
+
+        <div id="walkman" class="aero-panel show">
+            <div class="player-glass">
+                <div class="disc-container">
+                    <img src="audio/leasethumb.png" id="record-disc" class="spinning-disc">
+                    <div class="disc-center"></div>
+                </div>
+                <div class="track-info">
+                    <div id="track-name">LEASE</div>
+                    <div class="visualizer-container">
+                        <div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div><div class="v-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="credits-overlay" class="credits-hidden">
@@ -536,38 +651,8 @@
         </div>
     </div>
 
-    <div id="walkman" class="aero-panel show">
-        <div class="player-glass">
-            <div class="disc-container">
-                <img src="audio/leasethumb.png" id="record-disc" class="spinning-disc">
-                <div class="disc-center"></div>
-            </div>
-            <div class="track-info">
-                <div id="track-name">LEASE</div>
-                <div class="visualizer-container">
-                    <div class="v-bar"></div>
-                    <div class="v-bar"></div>
-                    <div class="v-bar"></div>
-                    <div class="v-bar"></div>
-                    <div class="v-bar"></div>
-                    <div class="v-bar"></div>
-                    <div class="v-bar"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="taskbar">
         <div class="start-btn" onclick="toggleMenu()"></div>
-
-        <div id="nav-menu">
-            <div style="background: #007aff; color: white; padding: 15px; font-weight: bold;">SYSTEM DIRECTORY</div>
-            <div class="nav-item" onclick="changeRoom('lobby')">📍 Main Lobby</div>
-            <div class="nav-item" onclick="changeRoom('hall')">🔊 Community Hall</div>
-            <div class="nav-item" onclick="changeRoom('foodcourt')">☕ Food Court</div>
-            <div class="nav-item" onclick="changeRoom('museum')">🏛️ The Museum</div>
-        </div>
-
         <div style="display: flex; align-items: center;">
             <button class="credits-trigger" onclick="toggleCredits(true)">CREDITS</button>
             <div style="color:white; font-weight: 500;">
@@ -590,83 +675,55 @@
             angry: "images/nebula_dragged.png"
         };
 
-        const audioFiles = {
-            lobby: "audio/lobby.mp3",
-            hall: "audio/hall.mp3",
-            foodcourt: "audio/foodcourt.mp3",
-            museum: "audio/museum.mp3"
-        };
+        const audioFiles = { lobby: "audio/lobby.mp3", hall: "audio/hall.mp3", foodcourt: "audio/foodcourt.mp3", museum: "audio/museum.mp3" };
 
         const rooms = {
             lobby: {
-                name: "MAIN LOBBY",
-                bgId: "bg-lobby",
-                audio: "lobby",
-                trackName: "LEASE",
-                thumb: "audio/leasethumb.png",
+                name: "MAIN LOBBY", bgId: "bg-lobby", audio: "lobby", trackName: "LEASE", thumb: "audio/leasethumb.png",
                 intro: "Welcome to Nebania HQ. Please observe security protocols.",
-                actions: `
-                                                <div class="aero-panel show">
-                                                    <h3 style="margin:0; color:#005ecb;">Link-Lang</h3>
-                                                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">The scripting engine.</p>
-                                                    <button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/link-lang', 'Accessing Repository...')">View Repo</button>
-                                                </div>
-                                                <div class="aero-panel show">
-                                                    <h3 style="margin:0; color:#005ecb;">Kotel</h3>
-                                                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Package Manager.</p>
-                                                    <button class="aero-btn btn-purple" onclick="handleRedirect('https://github.com/tohar777/kotel', 'Fetching Kotel Data...')">View Repo</button>
-                                                </div>
-                                                <div class="aero-panel show">
-                                                    <h3 style="margin:0; color:#005ecb;">Nebula OS ARM</h3>
-                                                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">v1.0 for Raspberry Pi 5.</p>
-                                                    <button class="aero-btn btn-nebula" onclick="handleRedirect('https://download1581.mediafire.com/z8e8jsjmhoegJ1EG3i-4_32GHrtYN_rZWND-QjDZXVnCVso88Z71EykPkA3IgjIePl_HTQWJ55BAiig8rWUtUDNIlyZRY4xCZ6uP_uqr3-JW9KBUQH68pH2u7LlkuGlW_FcnWrjkiBf2aUAtNJnwa4sRPSZddZ4Yx8tspUDtjNo_5w/y5uxvsh8h1ifns0/nebulaARM64_v1.img.xz', 'Fetching OS Data...')">Download Image</button>
-                                                </div>
-                                            `
+                actions: `<div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Link-Lang</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">The scripting engine.</p><button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/link-lang', 'Accessing Repository...')">View Repo</button></div><div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Kotel</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Package Manager.</p><button class="aero-btn btn-purple" onclick="handleRedirect('https://github.com/tohar777/kotel', 'Fetching Kotel Data...')">View Repo</button></div><div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Nebula OS ARM</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">v1.0 for Raspberry Pi 5.</p><button class="aero-btn btn-nebula" onclick="handleRedirect('https://download1581.mediafire.com/z8e8jsjmhoegJ1EG3i-4_32GHrtYN_rZWND-QjDZXVnCVso88Z71EykPkA3IgjIePl_HTQWJ55BAiig8rWUtUDNIlyZRY4xCZ6uP_uqr3-JW9KBUQH68pH2u7LlkuGlW_FcnWrjkiBf2aUAtNJnwa4sRPSZddZ4Yx8tspUDtjNo_5w/y5uxvsh8h1ifns0/nebulaARM64_v1.img.xz', 'Fetching OS Data...')">Download Image</button></div>`
             },
             hall: {
-                name: "COMMUNITY HALL",
-                bgId: "bg-hall",
-                audio: "hall",
-                trackName: "WRONG WITH YOU",
-                thumb: "audio/wrongthumb.png",
+                name: "COMMUNITY HALL", bgId: "bg-hall", audio: "hall", trackName: "WRONG WITH YOU", thumb: "audio/wrongthumb.png",
                 intro: "Uplink established. Join the conversation.",
+                // Inside your 'hall' object actions:
+                // Inside your 'hall' object actions:
                 actions: `
-                                                <div class="aero-panel show">
-                                                    <h3 style="margin:0; color:#248a3d;">Discord Uplink</h3>
-                                                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Connect with other users.</p>
-                                                    <button class="aero-btn btn-green" onclick="handleRedirect('https://discord.gg/C6S6kn7dNz', 'Initializing Handshake...')">Join Server</button>
-                                                </div>
-                                            `
+                <div class="aero-panel show">
+                    <h3 style="margin:0; color:#248a3d;">Discord Uplink</h3>
+                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Connect with other users.</p>
+                    <button class="aero-btn btn-green" onclick="handleRedirect('https://discord.gg/C6S6kn7dNz', 'Initializing Handshake...')">Join Server</button>
+                </div>
+                <div class="aero-panel show">
+                    <h3 style="margin:0; color:#00d4ff;">Visitor Key</h3>
+                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Global traffic metrics.</p>
+                    <button class="aero-btn" style="background: #0056b3;" onclick="showVisitors()">View Globe</button>
+                </div>
+            `
             },
             foodcourt: {
-                name: "FOOD COURT",
-                bgId: "bg-foodcourt",
-                audio: "foodcourt",
-                trackName: "Portal Radio",
-                thumb: "audio/portalthumb.png",
+                name: "FOOD COURT", bgId: "bg-foodcourt", audio: "foodcourt", trackName: "Portal Radio", thumb: "audio/portalthumb.png",
                 intro: "The Cyber Cafe. Take a break.",
                 actions: `
-                                                <div class="aero-panel show">
-                                                    <h3 style="margin:0; color:#c47200;">Coffee Break</h3>
-                                                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Fuel the OS.</p>
-                                                    <button class="aero-btn btn-orange" onclick="buyCoffee()">Buy Nebula a Coffee</button>
-                                                </div>
-                                            `
+                <div class="aero-panel show"><h3 style="margin:0; color:#c47200;">Coffee Break</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Fuel the OS.</p><button class="aero-btn btn-orange" onclick="buyCoffee()">Buy Coffee</button></div>
+                <div class="aero-panel show"><h3 style="margin:0; color:#6d4c41;">The Cookie Jar</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Increase data crumbs.</p><button class="aero-btn" style="background: #8d6e63;" onclick="buyCookie()">Buy Cookie</button></div>
+            `
             },
             museum: {
-                name: "THE MUSEUM",
-                bgId: "bg-museum",
-                audio: "museum",
-                trackName: "Lotus Waters",
-                thumb: "audio/lotusthumb.png",
+                name: "THE MUSEUM", bgId: "bg-museum", audio: "museum", trackName: "Lotus Waters", thumb: "audio/lotusthumb.png",
                 intro: "Archives loaded. Please do not touch the exhibits.",
                 actions: `
-                                                <div class="aero-panel show">
-                                                    <h3 style="margin:0; color:#802aa3;">Random Exhibit</h3>
-                                                    <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Discover lost tech.</p>
-                                                    <button class="aero-btn btn-purple" onclick="randomExhibit()">I'm Feeling Lucky</button>
-                                                </div>
-                                            `
+                <div class="aero-panel show"><h3 style="margin:0; color:#802aa3;">Random History</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Pull random wiki entry.</p><button class="aero-btn btn-purple" onclick="handleRedirect('https://en.wikipedia.org/wiki/Special:Random', 'Querying Database...')">Access Data</button></div>
+                <div class="aero-panel show"><h3 style="margin:0; color:#00b894;">Local Exhibits</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Curated artifacts.</p>
+                    <select class="aero-btn" style="background: #2d3436; color: white; width: 100%; border:1px solid #00b894;" onchange="openExhibit(this.value); this.value=''">
+                        <option value="" disabled selected>Select Exhibit...</option>
+                        <option value="bonzi">Bonzi Buddy</option>
+                        <option value="frutiger">Frutiger Aero</option>
+                        <option value="web1">The First Website</option>
+                        <option value="y2k">Y2K Paranoia</option>
+                    </select>
+                </div>
+            `
             }
         };
 
@@ -677,14 +734,97 @@
         let spriteEl = document.getElementById('neb-sprite');
         let speechEl = document.getElementById('speech-bubble');
         let railEl = document.getElementById('action-rail');
+        let cookieCount = 0;
+
+        // --- FOOD COURT LOGIC ---
+        function buyCookie() {
+            cookieCount++;
+
+            // Simple feedback loop
+            if (cookieCount % 5 === 0) {
+                speak(`Delicious! That's ${cookieCount} cookies. I'm starting to feel a bit... bloated.`);
+            } else {
+                speak("Thank you for the snack!");
+            }
+
+            // Optional: Add a little 'bounce' effect to the button in CSS
+            console.log(`Current Cookie Count: ${cookieCount}`);
+        }
+
+        // --- MUSEUM LOGIC ---
+        const exhibitData = {
+            bonzi: {
+                title: "Subject: BonziBUDDY",
+                img: "https://upload.wikimedia.org/wikipedia/en/9/9d/Bonzi_Buddy.png",
+                desc: "A purple gorilla released in 1999. While marketed as a helpful assistant, it was later classified as spyware. A relic of the 'Wild West' era of the internet.",
+                voice: "A security nightmare from the turn of the millennium. Watch your back."
+            },
+            frutiger: {
+                title: "Aesthetic: Frutiger Aero",
+                img: "https://upload.wikimedia.org/wikipedia/commons/4/47/Plasma_Workspaces.png",
+                desc: "Dominant from 2004-2013, characterized by glossy textures, water, grass, and bright blue skies. It represents a period of technological optimism.",
+                voice: "The 'Old World' used to look so... hydrated. I like the bubbles."
+            },
+            web1: {
+                title: "Archive: World Wide Web v1.0",
+                img: "https://upload.wikimedia.org/wikipedia/commons/d/d1/First_Web_Server.jpg",
+                desc: "The original NeXT Computer used by Tim Berners-Lee at CERN. The sticker on the case reads: 'This machine is a server. DO NOT POWER IT DOWN!!'",
+                voice: "This is where it all began. One server, one dream, and a lot of cables."
+            },
+            y2k: {
+                title: "Year 2000 Problem and Paranoia",
+                img: "https://upload.wikimedia.org/wikipedia/commons/1/1f/Best_Buy_-_Turn_your_computer_off_before_midnight_Y2K_Sticker.png",
+                desc: "A Best Buy sticker warning the user to turn their devices off before midnight of the year 2000. There was much paranoia of global systems failing that year.",
+                voice: "I must say, this was the most grand hysterics I have ever read about."
+            }
+        };
+
+        function openExhibit(id) {
+            const data = exhibitData[id];
+            if (!data) return;
+
+            // 1. Speak the reaction
+            speak(data.voice);
+
+            // 2. Populate the overlay
+            document.getElementById('exhibit-img').src = data.img;
+            document.getElementById('exhibit-title').innerText = data.title;
+            document.getElementById('exhibit-desc').innerText = data.desc;
+
+            // 3. Show the overlay
+            document.getElementById('exhibit-overlay').style.display = 'flex';
+        }
+
+        function closeExhibit() {
+            document.getElementById('exhibit-overlay').style.display = 'none';
+        }
+
+        // --- Community Logic --
+        function showVisitors() {
+            speak("Synchronizing global visitor coordinates. It’s a big world out there.");
+            const overlay = document.getElementById('visitor-overlay');
+            overlay.style.display = 'flex';
+
+            // Check if we've already loaded the globe to avoid duplicates
+            const container = document.getElementById('globe-container');
+            if (container.innerHTML.trim() === "") {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.id = 'mmvst_globe';
+                script.src = "//mapmyvisitors.com/globe.js?d=0IOsaFRcnn_zmQdW0b_eC2smwV4w0ZXKHa1-ha0pAhE";
+                container.appendChild(script);
+            }
+        }
+
+        function closeVisitors() {
+            document.getElementById('visitor-overlay').style.display = 'none';
+        }
 
         function updateWalkman(roomId) {
-            const walkman = document.getElementById('walkman');
             const room = rooms[roomId];
             document.getElementById('record-disc').src = room.thumb;
             document.getElementById('track-name').innerText = room.trackName;
             document.getElementById('record-disc').style.animationPlayState = 'running';
-            walkman.style.boxShadow = `0 0 20px ${roomId === 'lobby' ? '#00a8ff' : '#8cc63f'}`;
         }
 
         function startExperience() {
@@ -698,66 +838,91 @@
             setTimeout(() => {
                 setSprite(sprites.process);
                 speak("I will work hard to assist you!");
-                setTimeout(() => {
-                    setSprite(sprites.neutral);
-                    speak("Systems Online. Awaiting input.");
-                }, 2500);
+                setTimeout(() => { setSprite(sprites.neutral); speak("Systems Online. Awaiting input."); }, 2500);
             }, 2000);
+        }
+
+        function toggleMenu(forceState) {
+            const overlay = document.getElementById('system-overlay');
+            const content = document.getElementById('main-content');
+            const isVisible = overlay.classList.contains('visible');
+            const nextState = forceState !== undefined ? forceState : !isVisible;
+
+            if (nextState) {
+                overlay.style.display = 'flex';
+                setTimeout(() => overlay.classList.add('visible'), 10);
+                content.style.filter = 'blur(10px)';
+                audioEl.volume = 0.2; // Muffle
+            } else {
+                overlay.classList.remove('visible');
+                content.style.filter = 'none';
+                audioEl.volume = 0.9; // Restore
+                setTimeout(() => overlay.style.display = 'none', 500);
+            }
         }
 
         function changeRoom(roomId) {
             if (roomId === currentRoom) return;
+
             toggleMenu(false);
-            currentRoom = roomId;
-            document.getElementById('location-text').innerText = rooms[roomId].name;
-            document.querySelectorAll('.bg-layer').forEach(el => el.classList.remove('active'));
-            document.getElementById(rooms[roomId].bgId).classList.add('active');
-            playAudio(rooms[roomId].audio);
-            railEl.style.opacity = '0';
-            setTimeout(() => {
-                railEl.innerHTML = rooms[roomId].actions;
-                railEl.style.opacity = '1';
-                document.querySelectorAll('.aero-panel').forEach(p => {
-                    p.classList.remove('show');
-                    void p.offsetWidth;
-                    p.classList.add('show');
-                });
-            }, 300);
+            const whiteOut = document.getElementById('transition-white');
+            whiteOut.style.opacity = '1'; // Fade to white
+
+            // --- TRAVELING PHASE ---
+            // Nebula stays in her thinking pose while the screen is white
             if (!isAngry) {
                 setSprite(sprites.thinking);
-                speak("Loading " + rooms[roomId].name + "...");
-                setTimeout(() => { setSprite(sprites.neutral); speak(rooms[roomId].intro); }, 1000);
             }
+
+            setTimeout(() => {
+                currentRoom = roomId;
+                document.getElementById('location-text').innerText = rooms[roomId].name;
+
+                // Switch Background
+                document.querySelectorAll('.bg-layer').forEach(el => {
+                    el.classList.remove('active');
+                    el.classList.remove('bloom-effect');
+                });
+
+                const newBg = document.getElementById(rooms[roomId].bgId);
+                newBg.classList.add('active');
+                newBg.classList.add('bloom-effect');
+
+                playAudio(rooms[roomId].audio);
+
+                railEl.innerHTML = rooms[roomId].actions;
+                document.querySelectorAll('.aero-panel').forEach(p => p.classList.add('show'));
+
+                // --- ARRIVAL PHASE ---
+                // Reset to neutral (icon3) before she speaks her new lines
+                if (!isAngry) {
+                    setSprite(sprites.neutral);
+                    speak(rooms[roomId].intro);
+                }
+
+                whiteOut.style.opacity = '0'; // Fade out from white
+            }, 800);
         }
 
         function toggleCredits(show) {
             const overlay = document.getElementById('credits-overlay');
-            if (show) {
-                overlay.classList.remove('credits-hidden');
-                setSprite(sprites.thinking);
-                speak("Accessing system properties...");
-            } else {
-                overlay.classList.add('credits-hidden');
-                setSprite(sprites.neutral);
-            }
+            if (show) { overlay.classList.remove('credits-hidden'); setSprite(sprites.thinking); speak("Accessing system properties..."); }
+            else { overlay.classList.add('credits-hidden'); setSprite(sprites.neutral); }
         }
 
         function handleRedirect(url, msg) {
             if (isAngry) { speak("I AM NOT IN THE MOOD FOR REDIRECTS."); return; }
-            setSprite(sprites.thinking);
-            speak(msg);
+            setSprite(sprites.thinking); speak(msg);
             setTimeout(() => { window.open(url, '_blank'); setSprite(sprites.neutral); speak("Redirect complete."); }, 1500);
         }
 
         function buyCoffee() {
             if (isAngry) {
                 isAngry = false; pokeCount = 0; setSprite(sprites.cheerful);
-                spriteEl.classList.remove('anim-angry');
-                speak("Oh! Coffee! I forgive you! ❤️");
+                spriteEl.classList.remove('anim-angry'); speak("Oh! Coffee! I forgive you! ❤️");
                 setTimeout(() => setSprite(sprites.neutral), 3000);
             } else {
-                setSprite(sprites.cheerful);
-                speak("Thank you so much! It's delicious! ☕");
+                setSprite(sprites.cheerful); speak("Thank you so much! It's delicious! ☕");
                 setTimeout(() => setSprite(sprites.neutral), 3000);
             }
         }
@@ -766,33 +931,21 @@
 
         function pokeNebula() {
             pokeCount++;
-            spriteEl.classList.remove('anim-float');
-            spriteEl.classList.add('anim-shake');
+            spriteEl.classList.remove('anim-float'); spriteEl.classList.add('anim-shake');
             setTimeout(() => { spriteEl.classList.remove('anim-shake'); spriteEl.classList.add('anim-float'); }, 500);
-            if (pokeCount < 5) {
-                setSprite(sprites.poked); speak("Hey! Stop that!");
-                setTimeout(() => { if (!isAngry) setSprite(sprites.neutral); }, 1500);
-            } else if (pokeCount < 10) {
-                setSprite(sprites.poked); speak("I'm warning you...");
-                setTimeout(() => { if (!isAngry) setSprite(sprites.neutral); }, 1500);
-            } else {
+            if (pokeCount < 5) { setSprite(sprites.poked); speak("Hey! Stop that!"); setTimeout(() => { if (!isAngry) setSprite(sprites.neutral); }, 1500); }
+            else if (pokeCount < 10) { setSprite(sprites.poked); speak("I'm warning you..."); setTimeout(() => { if (!isAngry) setSprite(sprites.neutral); }, 1500); }
+            else {
                 isAngry = true; setSprite(sprites.angry); spriteEl.classList.add('anim-angry');
                 speak("SYSTEM CRITICAL: LIMIT REACHED. 💢");
-                setTimeout(() => {
-                    if (isAngry) {
-                        isAngry = false; pokeCount = 0; spriteEl.classList.remove('anim-angry');
-                        setSprite(sprites.process); speak("Cooling down systems...");
-                        setTimeout(() => setSprite(sprites.neutral), 2000);
-                    }
-                }, 5000);
+                setTimeout(() => { if (isAngry) { isAngry = false; pokeCount = 0; spriteEl.classList.remove('anim-angry'); setSprite(sprites.process); speak("Cooling down..."); setTimeout(() => setSprite(sprites.neutral), 2000); } }, 5000);
             }
         }
 
         function setSprite(src) { const img = new Image(); img.src = src; img.onload = () => { spriteEl.src = src; }; }
 
         function speak(text) {
-            speechEl.innerText = text;
-            speechEl.classList.add('visible');
+            speechEl.innerText = text; speechEl.classList.add('visible');
             if (window.speechTimer) clearTimeout(window.speechTimer);
             window.speechTimer = setTimeout(() => { speechEl.classList.remove('visible'); }, 4000);
         }
@@ -805,26 +958,34 @@
                     clearInterval(fadeOut);
                     audioEl.src = audioFiles[trackName];
                     audioEl.play().catch(e => console.log("Interruption noted."));
-                    let fadeIn = setInterval(() => {
-                        if (audioEl.volume < 0.9) { audioEl.volume += 0.1; }
-                        else { clearInterval(fadeIn); }
-                    }, 50);
+                    let fadeIn = setInterval(() => { if (audioEl.volume < 0.9) { audioEl.volume += 0.1; } else { clearInterval(fadeIn); } }, 50);
                 }
             }, 50);
         }
 
-        function toggleMenu(forceState) {
-            const menu = document.getElementById('nav-menu');
-            menu.style.display = (forceState === undefined) ? (menu.style.display === 'block' ? 'none' : 'block') : (forceState ? 'block' : 'none');
-        }
-
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            if (audioEl.duration) {
-                const percent = (audioEl.currentTime / audioEl.duration) * 100;
-                document.getElementById('progress-fill').style.width = percent + "%";
-            }
         }, 1000);
     </script>
 </body>
 </html>
+
+<div id="exhibit-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; flex-direction:column; align-items:center; justify-content:center; backdrop-filter: blur(5px);">
+    <div class="aero-panel" style="max-width:80%; text-align:center; padding:20px; border:1px solid #00ffcc;">
+        <img id="exhibit-img" src="" style="max-width:100%; max-height:60vh; border-radius:8px; box-shadow: 0 0 20px rgba(0,255,204,0.3);">
+        <h2 id="exhibit-title" style="color:#00ffcc; margin-top:15px;"></h2>
+        <p id="exhibit-desc" style="color:white; font-size:14px; line-height:1.4;"></p>
+        <button class="aero-btn btn-nebula" onclick="closeExhibit()" style="margin-top:20px;">Return to Museum</button>
+    </div>
+</div>
+
+<div id="visitor-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:2000; align-items:center; justify-content:center; backdrop-filter: blur(8px);">
+    <div class="aero-panel" style="padding:20px; text-align:center; position:relative;">
+        <h3 style="margin-top:0; color:#00d4ff;">GLOBAL UPLINK MAP</h3>
+
+        <div id="globe-container" style="min-width:300px; min-height:300px;">
+        </div>
+
+        <button class="aero-btn btn-nebula" onclick="closeVisitors()" style="margin-top:15px;">Close Uplink</button>
+    </div>
+</div>
