@@ -800,19 +800,42 @@
         }
 
         // --- Community Logic --
-        function showVisitors() {
-            speak("Synchronizing global visitor coordinates. It’s a big world out there.");
+        async function showVisitors() {
+            speak("Scanning for active uplinks. Accessing your local node data now.");
+
             const overlay = document.getElementById('visitor-overlay');
+            const container = document.getElementById('globe-container');
             overlay.style.display = 'flex';
 
-            // Check if we've already loaded the globe to avoid duplicates
-            const container = document.getElementById('globe-container');
-            if (container.innerHTML.trim() === "") {
-                const script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.id = 'mmvst_globe';
-                script.src = "//mapmyvisitors.com/globe.js?d=0IOsaFRcnn_zmQdW0b_eC2smwV4w0ZXKHa1-ha0pAhE";
-                container.appendChild(script);
+            container.innerHTML = `<p style="color:#00d4ff; font-family:monospace; animation: pulse 1s infinite;">[ FETCHING NODE DATA... ]</p>`;
+
+            try {
+                // We use 'https://api.ipify.org?format=json' - it's the most reliable IP API
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+
+                container.innerHTML = `
+            <div style="text-align:left; font-family:monospace; color:#00ff41; background:rgba(0,0,0,0.8); padding:15px; border-radius:5px; border:1px solid #00ff41; box-shadow: 0 0 15px #00ff41;">
+                <p style="color:white; border-bottom:1px solid #00ff41; padding-bottom:5px;">NEBANIA NETWORK ADAPTER v1.0</p>
+                <p>> STATUS: <span style="color:#00ff41;">CONNECTED</span></p>
+                <p>> LOCAL IP: ${data.ip}</p>
+                <p>> GATEWAY: NEB-HQ-PRIMARY</p>
+                <p>> ENCRYPTION: AES-256-GCM</p>
+                <p style="color:#00d4ff; margin-top:10px;">[ GLOBAL TRAFFIC LOGS ]</p>
+                <button class="aero-btn" style="width:100%; font-size:10px; border-color:#00d4ff;" onclick="window.open('https://ahrefs.com/traffic-checker/?input=nebania.site&mode=subdomains', '_blank')">OPEN WORLD MAP</button>
+            </div>
+        `;
+            } catch (error) {
+                // Fallback: If the internet blocks the API, show a "Simulated" scan
+                container.innerHTML = `
+            <div style="text-align:left; font-family:monospace; color:#f1c40f; background:rgba(0,0,0,0.8); padding:15px; border-radius:5px; border:1px solid #f1c40f;">
+                <p>> ERROR: EXTERNAL API BLOCKED</p>
+                <p>> SWITCHING TO EMERGENCY PROTOCOL...</p>
+                <p>> LOCAL NODE: [REDACTED]</p>
+                <p>> SYSTEM STATUS: <span style="color:#00ff41;">STABLE</span></p>
+                <button class="aero-btn" style="width:100%; margin-top:10px;" onclick="window.open('https://ahrefs.com/traffic-checker/?input=nebania.site&mode=subdomains', '_blank')">FORCE OPEN MAP</button>
+            </div>
+        `;
             }
         }
 
