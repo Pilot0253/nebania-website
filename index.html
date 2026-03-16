@@ -608,6 +608,7 @@
         <img src="images/hall.jpg" class="bg-layer" id="bg-hall">
         <img src="images/foodcourt.jpg" class="bg-layer" id="bg-foodcourt">
         <img src="images/museum.jpg" class="bg-layer" id="bg-museum">
+        <img src="images/vault.jpg" class="bg-layer" id="bg-vault">
         <div id="vignette"></div>
 
         <div id="action-rail"></div>
@@ -675,13 +676,50 @@
             angry: "images/nebula_dragged.png"
         };
 
-        const audioFiles = { lobby: "audio/lobby.mp3", hall: "audio/hall.mp3", foodcourt: "audio/foodcourt.mp3", museum: "audio/museum.mp3" };
+        const audioFiles = { lobby: "audio/lobby.mp3", hall: "audio/hall.mp3", foodcourt: "audio/foodcourt.mp3", museum: "audio/museum.mp3", vault: "audio/vault.mp3" };
 
         const rooms = {
             lobby: {
                 name: "MAIN LOBBY", bgId: "bg-lobby", audio: "lobby", trackName: "LEASE", thumb: "audio/leasethumb.png",
                 intro: "Welcome to Nebania HQ. Please observe security protocols.",
-                actions: `<div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Link-Lang</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">The scripting engine.</p><button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/link-lang', 'Accessing Repository...')">View Repo</button></div><div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Kotel</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Package Manager.</p><button class="aero-btn btn-purple" onclick="handleRedirect('https://github.com/tohar777/kotel', 'Fetching Kotel Data...')">View Repo</button></div><div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Nebula OS ARM</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Default Login: User: root Password: Nebula!</p><button class="aero-btn btn-nebula" onclick="handleRedirect('https://download1581.mediafire.com/z8e8jsjmhoegJ1EG3i-4_32GHrtYN_rZWND-QjDZXVnCVso88Z71EykPkA3IgjIePl_HTQWJ55BAiig8rWUtUDNIlyZRY4xCZ6uP_uqr3-JW9KBUQH68pH2u7LlkuGlW_FcnWrjkiBf2aUAtNJnwa4sRPSZddZ4Yx8tspUDtjNo_5w/y5uxvsh8h1ifns0/nebulaARM64_v1.img.xz', 'Fetching OS Data...')">Download Image</button></div>`
+                actions: `
+            <div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Link-Lang</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">The scripting engine.</p><button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/link-lang', 'Accessing Repository...')">View Repo</button></div>
+            <div class="aero-panel show"><h3 style="margin:0; color:#005ecb;">Kotel</h3><p style="font-size:12px; opacity:0.8; margin-bottom:10px;">Package Manager.</p><button class="aero-btn btn-purple" onclick="handleRedirect('https://github.com/tohar777/kotel', 'Fetching Kotel Data...')">View Repo</button></div>
+            <div class="aero-panel show">
+                <h3 style="margin:0; color:#005ecb;">Nebula OS ARM</h3>
+                <p style="font-size:12px; opacity:0.8; margin-bottom:10px;">System Images & Source.</p>
+                <button class="aero-btn btn-nebula" onclick="changeRoom('vault')">Enter Core Vault</button>
+            </div>`
+            },
+            vault: {
+                name: "CORE VAULT", bgId: "bg-vault", audio: "vault", trackName: "BROWSER HISTORY", thumb: "audio/browserthumb.png",
+                intro: "Environment stabilized. You are at the core. All system images are stored here.",
+                actions: `
+            <div class="aero-panel show" style="border: 1px dashed #ffcc00; background: rgba(255, 204, 0, 0.1);">
+                <h3 style="margin:0; color:#ffcc00;">Default Credentials</h3>
+                <p style="font-family:monospace; font-size:14px; margin: 5px 0; color:#fff;">
+                    USER: <span style="color:#ffcc00;">root</span><br>
+                    PASS: <span style="color:#ffcc00;">Nebula!</span>
+                </p>
+            </div>
+
+            <div class="aero-panel show">
+                <h3 style="margin:0; color:#00ff41;">Alpha v1.0.0</h3>
+                <p style="font-size:11px; opacity:0.8; margin-bottom:10px;">Old Alpha Release (ARM64).</p>
+                <button class="aero-btn" style="border-color:#00ff41;" onclick="handleRedirect('https://download1581.mediafire.com/z8e8jsjmhoegJ1EG3i-4_32GHrtYN_rZWND-QjDZXVnCVso88Z71EykPkA3IgjIePl_HTQWJ55BAiig8rWUtUDNIlyZRY4xCZ6uP_uqr3-JW9KBUQH68pH2u7LlkuGlW_FcnWrjkiBf2aUAtNJnwa4sRPSZddZ4Yx8tspUDtjNo_5w/y5uxvsh8h1ifns0/nebulaARM64_v1.img.xz', 'Downloading Alpha...')">Get .img</button>
+            </div>
+            
+            <div class="aero-panel show">
+                <h3 style="margin:0; color:#00d4ff;">Beta v1.1.0</h3>
+                <p style="font-size:11px; opacity:0.8; margin-bottom:10px;">Stable Release (ARM64).</p>
+                <button class="aero-btn" style="border-color:#00d4ff;" onclick="handleRedirect('https://download1322.mediafire.com/e6scaph1bjvgJZWjA_IMg5IUT1VVpamJYzyPfvhybBDOMdmYmUDu_6SHvU3KGsRrzEBj35Gn68FLU-G1ZPK9z01pNdAn2SflKDaot2YdeeMPKRLM6GnrxEBRFWmRB26TaZlNdjsZ7ZeFz0oqYxT9rMtxDoObO1TkNf6D7sKD66kp1A/wty19inx0ky6b79/nebulaARM_v1.1.0_dist.img.xz', 'Downloading Beta...')">Get .img</button>
+            </div>
+
+            <div class="aero-panel show">
+                <h3 style="margin:0; color:#ffcc00;">Kernel Sources</h3>
+                <p style="font-size:11px; opacity:0.8; margin-bottom:10px;">Recompilation binaries.</p>
+                <button class="aero-btn" style="border-color:#ffcc00;" onclick="handleRedirect('https://download1654.mediafire.com/jjzgs7zd7n6g0PJVOofhhBPG94UWkWF_41agIMaZhyZyag5tGIEpqFuAYwE2-OAAx5ItXZn1qe8erR2xBI-GYdYV-HX5RJ_GR72Rpk0xJQ4VOP_K6Z8Nt1GvemprA7FxHvy-7FegrUcegNljOOM5FNZzOXu06dh7-a0BxQjf2pAi8w/n7sdogt8wyg01gb/sources.tar.xz', 'Extracting Sources...')">Get .tar.xz</button>
+            </div>`
             },
             hall: {
                 name: "COMMUNITY HALL", bgId: "bg-hall", audio: "hall", trackName: "WRONG WITH YOU", thumb: "audio/wrongthumb.png",
@@ -884,8 +922,14 @@
             }
         }
 
+        const sfxWhoosh = new Audio('audio/whoosh.mp3');
+        sfxWhoosh.volume = 1.0; // Adjust as needed
+
         function changeRoom(roomId) {
             if (roomId === currentRoom) return;
+
+            sfxWhoosh.currentTime = 0; // Reset to start if clicked rapidly
+            sfxWhoosh.play();
 
             toggleMenu(false);
             const whiteOut = document.getElementById('transition-white');
@@ -1012,4 +1056,3 @@
         <button class="aero-btn btn-nebula" onclick="closeVisitors()" style="margin-top:15px;">Close Uplink</button>
     </div>
 </div>
-
