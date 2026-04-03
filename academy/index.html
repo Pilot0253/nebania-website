@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/nebula_favi.png">
+    <title>Link-Lang Academy — Nebania</title>
+    <style>
+        :root {
+            --nebula-blue: #00a8ff;
+            --leaf-green: #8cc63f;
+            --glass-bg: rgba(255,255,255,0.62);
+            --glass-border: rgba(255,255,255,0.88);
+            --glass-shine: rgba(255,255,255,0.45);
+            --shadow: 0 8px 32px rgba(0,80,160,0.18);
+            --text-dark: #0d1f35;
+            --text-mid: #2a4060;
+            --accent-orange: #ff9500;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 90% 60% at 15% 5%,  rgba(0,168,255,0.28) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 80% at 85% 95%, rgba(140,198,63,0.18) 0%, transparent 55%),
+                radial-gradient(ellipse 80% 50% at 60% 40%,  rgba(0,90,200,0.12) 0%, transparent 70%),
+                linear-gradient(160deg, #c8e8ff 0%, #e8f5e0 40%, #b8d8f8 100%);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ── BETA MODAL ── */
+        #beta-overlay {
+            position: fixed; inset: 0; z-index: 9000;
+            background: rgba(0,30,70,0.45);
+            backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.4s;
+        }
+        #beta-overlay.hidden { opacity: 0; pointer-events: none; }
+
+        #beta-modal {
+            background: linear-gradient(145deg, rgba(255,255,255,0.88) 0%, rgba(220,240,255,0.75) 100%);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 22px;
+            padding: 36px 40px;
+            max-width: 460px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,80,200,0.22), inset 0 1px 0 rgba(255,255,255,0.9);
+            text-align: center;
+            position: relative;
+        }
+        #beta-modal .modal-stripe {
+            position: absolute; top: 0; left: 0; right: 0; height: 5px;
+            background: linear-gradient(90deg, var(--nebula-blue), var(--leaf-green));
+            border-radius: 22px 22px 0 0;
+        }
+        #beta-modal .beta-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9500, #ff6b00);
+            color: white; font-size: 11px; font-weight: 800;
+            letter-spacing: 2px; padding: 4px 12px;
+            border-radius: 20px; margin-bottom: 16px;
+            box-shadow: 0 3px 10px rgba(255,149,0,0.4);
+            text-transform: uppercase;
+        }
+        #beta-modal h2 {
+            font-size: 1.6rem; font-weight: 700;
+            color: var(--text-dark); margin-bottom: 12px;
+        }
+        #beta-modal p {
+            color: var(--text-mid); font-size: 0.93rem;
+            line-height: 1.65; margin-bottom: 8px;
+        }
+        #beta-modal .nebula-quote {
+            background: rgba(0,168,255,0.1);
+            border-left: 3px solid var(--nebula-blue);
+            border-radius: 0 10px 10px 0;
+            padding: 10px 16px; margin: 18px 0;
+            font-style: italic; color: var(--text-mid);
+            font-size: 0.9rem; text-align: left;
+        }
+        .aero-btn {
+            display: inline-block; padding: 11px 32px;
+            border-radius: 30px; border: none; cursor: pointer;
+            font-weight: 700; font-size: 14px; color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+            background: linear-gradient(180deg, #5ac8fa 0%, #007aff 50%, #005ecb 100%);
+            box-shadow: 0 4px 12px rgba(0,122,255,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: transform 0.15s, filter 0.15s;
+        }
+        .aero-btn:hover  { transform: scale(1.04); filter: brightness(1.08); }
+        .aero-btn:active { transform: scale(0.97); }
+        .btn-green  { background: linear-gradient(180deg,#aaffaa 0%,#34c759 50%,#248a3d 100%); box-shadow: 0 4px 12px rgba(52,199,89,0.35), inset 0 1px 0 rgba(255,255,255,0.4); }
+        .btn-orange { background: linear-gradient(180deg,#ffdca8 0%,#ff9500 50%,#c47200 100%); box-shadow: 0 4px 12px rgba(255,149,0,0.35), inset 0 1px 0 rgba(255,255,255,0.4); }
+        .btn-ghost  {
+            background: transparent;
+            border: 2px solid rgba(0,122,255,0.5);
+            color: #005ecb;
+            box-shadow: none;
+        }
+
+        /* ── LAYOUT ── */
+        #app {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ── NEBULA PANEL (left) ── */
+        #nebula-panel {
+            width: 260px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 20px;
+            background: linear-gradient(160deg, rgba(255,255,255,0.72) 0%, rgba(200,232,255,0.55) 100%);
+            border-right: 1.5px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            box-shadow: 4px 0 24px rgba(0,80,180,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        #nebula-panel .panel-header {
+            font-size: 11px; letter-spacing: 2px; font-weight: 700;
+            color: var(--nebula-blue); text-transform: uppercase;
+            margin-bottom: 16px; opacity: 0.8;
+        }
+
+        #neb-sprite {
+            width: 180px; height: auto;
+            filter: drop-shadow(0 6px 20px rgba(0,168,255,0.3));
+            transition: src 0.2s;
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-10px); }
+        }
+
+        #speech-bubble {
+            margin-top: 14px;
+            background: linear-gradient(180deg, #fff 0%, #f0f6ff 100%);
+            border: 2px solid rgba(0,168,255,0.5);
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: var(--text-dark);
+            font-weight: 500;
+            min-height: 72px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0,122,255,0.1);
+            position: relative;
+            transition: opacity 0.3s;
+            width: 100%;
+        }
+        #speech-bubble::before {
+            content: '';
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-bottom-color: rgba(0,168,255,0.5);
+        }
+
+        #help-btn {
+            margin-top: 14px; width: 100%;
+            font-size: 13px; padding: 9px 0;
+        }
+
+        /* chapter nav */
+        #chapter-nav {
+            margin-top: auto;
+            width: 100%;
+        }
+        #chapter-nav .nav-label {
+            font-size: 10px; letter-spacing: 1.5px; font-weight: 700;
+            color: var(--text-mid); text-transform: uppercase;
+            margin-bottom: 8px; opacity: 0.7;
+        }
+        .chapter-btn {
+            display: flex; align-items: center; gap: 10px;
+            width: 100%; padding: 9px 12px;
+            border-radius: 12px; border: 1.5px solid transparent;
+            background: transparent; cursor: pointer;
+            font-size: 13px; font-weight: 600;
+            color: var(--text-mid);
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+            text-align: left; margin-bottom: 4px;
+        }
+        .chapter-btn .ch-num {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: rgba(0,168,255,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 800; color: var(--nebula-blue);
+            flex-shrink: 0;
+        }
+        .chapter-btn:hover {
+            background: rgba(0,168,255,0.1);
+            border-color: rgba(0,168,255,0.3);
+        }
+        .chapter-btn.active {
+            background: rgba(0,168,255,0.14);
+            border-color: rgba(0,168,255,0.55);
+            color: #004fa3;
+        }
+        .chapter-btn.active .ch-num {
+            background: var(--nebula-blue);
+            color: white;
+        }
+        .chapter-btn.done .ch-num {
+            background: var(--leaf-green);
+            color: white;
+        }
+
+        /* home btn */
+        #home-link {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: var(--text-mid); opacity: 0.6;
+            text-decoration: none; margin-top: 14px;
+            transition: opacity 0.2s;
+        }
+        #home-link:hover { opacity: 1; }
+
+        /* ── MAIN CONTENT ── */
+        #main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px 48px;
+        }
+
+        /* chapter header */
+        .chapter-header {
+            margin-bottom: 28px;
+        }
+        .chapter-header .ch-tag {
+            font-size: 11px; letter-spacing: 2px; font-weight: 700;
+            text-transform: uppercase; color: var(--nebula-blue);
+            opacity: 0.75; margin-bottom: 6px;
+        }
+        .chapter-header h1 {
+            font-size: 2rem; font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+        .chapter-header .ch-desc {
+            margin-top: 8px; font-size: 0.95rem;
+            color: var(--text-mid); line-height: 1.6;
+        }
+
+        /* lesson card */
+        .lesson-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.78) 0%, rgba(220,240,255,0.6) 100%);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .lesson-card h2 {
+            font-size: 1.1rem; font-weight: 700;
+            color: var(--text-dark); margin-bottom: 10px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .lesson-card h2 .tag {
+            font-size: 10px; padding: 3px 9px; border-radius: 20px;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .tag-syntax   { background: rgba(0,168,255,0.15); color: #005ecb; }
+        .tag-example  { background: rgba(140,198,63,0.2); color: #2d6a0f; }
+        .tag-note     { background: rgba(255,149,0,0.18); color: #8a4600; }
+
+        .lesson-card p {
+            font-size: 0.91rem; color: var(--text-mid);
+            line-height: 1.7; margin-bottom: 12px;
+        }
+        .lesson-card p:last-child { margin-bottom: 0; }
+
+        /* inline code */
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background: rgba(0,80,180,0.1);
+            padding: 2px 7px; border-radius: 5px;
+            font-size: 0.87em; color: #004fa3;
+        }
+
+        /* code block */
+        .code-block {
+            background: rgba(8,20,50,0.88);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 14px 0;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+            border: 1px solid rgba(0,168,255,0.2);
+        }
+        .code-block pre {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #c8d8f0;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        /* syntax colours */
+        .kw  { color: #5ac8fa; font-weight: 700; }   /* keywords */
+        .fn  { color: #8cc63f; }                      /* functions */
+        .str { color: #ffca58; }                      /* strings */
+        .num { color: #ff9f7a; }                      /* numbers */
+        .cmt { color: #5a7a9a; font-style: italic; } /* comments */
+        .op  { color: #e0a0ff; }                      /* operators */
+
+        .copy-btn {
+            position: absolute; top: 10px; right: 12px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.65);
+            font-size: 11px; padding: 4px 10px;
+            border-radius: 8px; cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.22); color: white; }
+        .copy-btn.copied { color: #8cc63f; border-color: #8cc63f; }
+
+        /* info box */
+        .info-box {
+            display: flex; gap: 12px; align-items: flex-start;
+            background: rgba(0,168,255,0.08);
+            border: 1.5px solid rgba(0,168,255,0.3);
+            border-radius: 12px; padding: 14px 16px;
+            margin: 14px 0; font-size: 0.88rem;
+            color: var(--text-mid); line-height: 1.6;
+        }
+        .info-box .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+        .warn-box {
+            background: rgba(255,149,0,0.08);
+            border-color: rgba(255,149,0,0.35);
+        }
+
+        /* ── QUIZ ── */
+        .quiz-section {
+            background: linear-gradient(145deg, rgba(0,168,255,0.07) 0%, rgba(140,198,63,0.06) 100%);
+            border: 2px solid rgba(0,168,255,0.3);
+            border-radius: 18px;
+            padding: 26px 28px;
+            margin-top: 28px;
+        }
+        .quiz-section h2 {
+            font-size: 1.1rem; font-weight: 800;
+            color: var(--text-dark); margin-bottom: 6px;
+        }
+        .quiz-section .quiz-sub {
+            font-size: 0.85rem; color: var(--text-mid);
+            margin-bottom: 20px; opacity: 0.8;
+        }
+
+        .quiz-q {
+            margin-bottom: 22px;
+            background: rgba(255,255,255,0.55);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 14px; padding: 18px 20px;
+        }
+        .quiz-q .q-text {
+            font-size: 0.93rem; font-weight: 600;
+            color: var(--text-dark); margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+        .q-opt {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 10px;
+            border: 1.5px solid rgba(0,122,255,0.2);
+            background: rgba(255,255,255,0.6);
+            cursor: pointer; font-size: 0.88rem;
+            color: var(--text-dark);
+            transition: background 0.18s, border-color 0.18s;
+        }
+        .q-opt:hover:not(.locked) { background: rgba(0,168,255,0.1); border-color: rgba(0,168,255,0.5); }
+        .q-opt .radio-dot {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid rgba(0,122,255,0.4);
+            flex-shrink: 0; transition: background 0.18s, border-color 0.18s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .q-opt.selected .radio-dot { background: var(--nebula-blue); border-color: var(--nebula-blue); }
+        .q-opt.selected .radio-dot::after { content:''; width:6px; height:6px; border-radius:50%; background:white; }
+        .q-opt.correct  { background: rgba(52,199,89,0.15); border-color: #34c759; color: #1a5e2a; }
+        .q-opt.wrong    { background: rgba(255,59,48,0.12);  border-color: #ff3b30; color: #7a1a14; }
+        .q-opt.locked   { cursor: default; }
+
+        .quiz-feedback {
+            font-size: 0.85rem; margin-top: 8px; font-weight: 600;
+            min-height: 20px;
+        }
+        .quiz-feedback.good { color: #248a3d; }
+        .quiz-feedback.bad  { color: #c0392b; }
+
+        .check-btn { margin-top: 6px; font-size: 13px; padding: 9px 24px; }
+
+        .quiz-score {
+            display: none; margin-top: 16px;
+            padding: 14px 18px; border-radius: 12px;
+            background: rgba(255,255,255,0.6);
+            border: 1.5px solid var(--glass-border);
+            font-size: 0.92rem; color: var(--text-dark);
+            font-weight: 600; text-align: center;
+        }
+
+        /* ── NAV FOOTER ── */
+        .chapter-nav-footer {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1.5px solid rgba(0,168,255,0.2);
+        }
+        .chapter-nav-footer .prog-text {
+            font-size: 12px; color: var(--text-mid);
+            opacity: 0.65; letter-spacing: 0.5px;
+        }
+
+        /* ── SCROLLBAR ── */
+        #main::-webkit-scrollbar { width: 6px; }
+        #main::-webkit-scrollbar-track { background: transparent; }
+        #main::-webkit-scrollbar-thumb { background: rgba(0,168,255,0.3); border-radius: 4px; }
+
+        /* ── PROGRESS BAR (top) ── */
+        #progress-bar {
+            position: fixed; top: 0; left: 260px; right: 0; height: 3px; z-index: 100;
+            background: rgba(255,255,255,0.2);
+        }
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--nebula-blue), var(--leaf-green));
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- BETA MODAL -->
+<div id="beta-overlay">
+    <div id="beta-modal">
+        <div class="modal-stripe"></div>
+        <div class="beta-badge">⚠ Beta</div>
+        <h2>Welcome to Link-Lang Academy</h2>
+        <p>This is an early access learning portal for <strong>Link-Lang v0.4</strong>. The language itself is actively under development — some behaviours may change.</p>
+        <div class="nebula-quote">
+            "I am Nebula. I will be your instructor. Try not to embarrass yourself."
+        </div>
+        <p style="font-size:0.82rem; opacity:0.7; margin-bottom:20px;">Lessons cover syntax, variables, control flow, and loops. Quizzes follow each section.</p>
+        <button class="aero-btn" onclick="dismissBeta()">Begin Training</button>
+    </div>
+</div>
+
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<div id="app">
+
+    <!-- NEBULA PANEL -->
+    <div id="nebula-panel">
+        <div class="panel-header">Instructor</div>
+        <img src="images/nebula_logo3.png" id="neb-sprite" alt="Nebula">
+        <div id="speech-bubble">Proceed to your lesson. I'll be watching.</div>
+        <button class="aero-btn check-btn" id="help-btn" onclick="askHelp()" style="margin-top:14px; width:100%; font-size:13px; padding:9px 0;">
+            💡 Ask Nebula
+        </button>
+
+        <div id="chapter-nav" style="margin-top:24px;">
+            <div class="nav-label">Chapters</div>
+            <button class="chapter-btn active" id="nav-0" onclick="goToChapter(0)">
+                <div class="ch-num">1</div> Syntax &amp; Comments
+            </button>
+            <button class="chapter-btn" id="nav-1" onclick="goToChapter(1)">
+                <div class="ch-num">2</div> Variables
+            </button>
+            <button class="chapter-btn" id="nav-2" onclick="goToChapter(2)">
+                <div class="ch-num">3</div> Control Flow
+            </button>
+            <button class="chapter-btn" id="nav-3" onclick="goToChapter(3)">
+                <div class="ch-num">4</div> Loops
+            </button>
+        </div>
+
+        <a href="index.html" id="home-link">← Back to Nebania HQ</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main">
+        <!-- rendered by JS -->
+    </div>
+</div>
+
+<audio id="bg-audio" loop src="audio/academy.mp3"></audio>
+
+<script>
+    // ── DATA (UPDATED TO MATCH LINK-LANG v0.4 REAL SYNTAX) ─────────────────────────
+
+    const chapters = [
+        {
+            tag: "Chapter 1",
+            title: "Syntax & Comments",
+            desc: "Link-Lang uses structured blocks with curly braces. Clean, explicit, and far less error-prone than whitespace guessing.",
+            nebulaIntro: "Let’s try this again. Properly this time.",
+            nebulaHelp: [
+                "The app keyword MUST use a string name.",
+                "Curly braces define blocks. Not indentation.",
+                "Comments start with #. Everything after is ignored."
+            ],
+            lessons: [
+                {
+                    title: "Basic Structure",
+                    tag: "syntax",
+                    content: `
+                    <p>A Link-Lang script starts with the <code>app</code> keyword, followed by a <strong>string name</strong>. Blocks are defined using <strong>curly braces</strong>.</p>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><span class="kw">app</span> <span class="str">"HelloApp"</span> {
+    <span class="fn">print</span>(<span class="str">"Hello from Link-Lang"</span>)
+}</pre>
+                    </div>
+
+                    <p>The app block contains your program. Everything inside the braces is executed.</p>
+                `
+                },
+                {
+                    title: "Real Example",
+                    tag: "example",
+                    content: `
+                    <p>This example reflects actual usage from the examples folder:</p>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><span class="kw">app</span> <span class="str">"Users"</span> {
+    <span class="kw">for</span> user <span class="kw">in</span> <span class="str">"ahmed,noobhack,root"</span> {
+        <span class="fn">print</span>(user)
+    }
+}</pre>
+                    </div>
+
+                    <p>Notice how loops and logic also use braces consistently.</p>
+                `
+                },
+                {
+                    title: "Comments",
+                    tag: "syntax",
+                    content: `
+                    <p>Comments use the <code>#</code> symbol. Anything after it is ignored.</p>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre><span class="cmt"># This is a comment</span>
+<span class="kw">app</span> <span class="str">"Test"</span> {
+    <span class="fn">print</span>(<span class="str">"Hello"</span>)  <span class="cmt"># Inline comment</span>
+}</pre>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="icon">📝</span>
+                        <span>No multi-line comments yet. Use multiple <code>#</code> lines.</span>
+                    </div>
+                `
+                },
+                {
+                    title: "Running a Script",
+                    tag: "note",
+                    content: `
+                    <p>Run a script using the Link-Lang interpreter:</p>
+
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<pre>./link examples/hello.link</pre>
+                    </div>
+
+                    <p>You can also enter REPL mode by running <code>./link</code>.</p>
+
+                    <div class="info-box warn-box">
+                        <span class="icon">⚠️</span>
+                        <span>Currently supported on Linux and Android (ARM64).</span>
+                    </div>
+                `
+                }
+            ],
+            quiz: [
+                {
+                    q: "What must follow the 'app' keyword?",
+                    options: ["A number", "A variable name", "A string name", "Nothing"],
+                    answer: 2,
+                    feedback: [
+                        "No. This isn't assembly.",
+                        "No. It must be a string.",
+                        "Correct. app requires a string name.",
+                        "That would be useless."
+                    ]
+                },
+                {
+                    q: "How are code blocks defined in Link-Lang?",
+                    options: ["Indentation", "Curly braces {}", "Semicolons", "Tabs only"],
+                    answer: 1,
+                    feedback: [
+                        "Outdated and wrong.",
+                        "Correct. Curly braces define blocks.",
+                        "No. Semicolons are not used.",
+                        "Tabs are irrelevant here."
+                    ]
+                },
+                {
+                    q: "What symbol starts a comment?",
+                    options: ["//", "#", "--", "/*"],
+                    answer: 1,
+                    feedback: [
+                        "Wrong language.",
+                        "Correct.",
+                        "No.",
+                        "Also wrong."
+                    ]
+                }
+            ]
+        },
+
+    // 1: Variables
+    {
+        tag: "Chapter 2",
+        title: "Variables",
+        desc: "Link-Lang is dynamically typed. You declare variables with the <code>set</code> keyword and the interpreter figures out the type.",
+        nebulaIntro: "Variables. The building blocks. Pay attention.",
+        nebulaHelp: [
+            "Use 'set' to declare a variable. Always. No exceptions.",
+            "Types are dynamic — the interpreter figures it out. You don't need to declare int or string.",
+            "You can reassign a variable with another 'set'. The old value is replaced."
+        ],
+        lessons: [
+            {
+                title: "Declaring Variables",
+                tag: "syntax",
+                content: `
+                    <p>All variables are declared with the <code>set</code> keyword. Link-Lang is <strong>dynamically typed</strong> — you don't specify a type, the runtime handles it.</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> name   <span class="op">=</span> <span class="str">"Nebula"</span>
+<span class="kw">set</span> age    <span class="op">=</span> <span class="num">7</span>
+<span class="kw">set</span> power  <span class="op">=</span> <span class="num">9.81</span>
+<span class="kw">set</span> active <span class="op">=</span> <span class="num">1</span>    <span class="cmt"># 1 = true, 0 = false</span>
+<span class="fn">print</span>(name)</pre>
+                    </div>
+                    <div class="info-box">
+                        <span class="icon">💡</span>
+                        <span>Booleans in v0.4 are represented as integers: <code>1</code> for true, <code>0</code> for false.</span>
+                    </div>
+                `
+            },
+            {
+                title: "Supported Types",
+                tag: "syntax",
+                content: `
+                    <p>Link-Lang v0.4 supports the following data types natively:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> myInt    <span class="op">=</span> <span class="num">42</span>          <span class="cmt"># Integer</span>
+<span class="kw">set</span> myFloat  <span class="op">=</span> <span class="num">3.14</span>        <span class="cmt"># Float</span>
+<span class="kw">set</span> myString <span class="op">=</span> <span class="str">"hello"</span>     <span class="cmt"># String</span>
+<span class="kw">set</span> myChar   <span class="op">=</span> <span class="str">'A'</span>         <span class="cmt"># Char (single quotes)</span></pre>
+                    </div>
+                `
+            },
+            {
+                title: "Type Casting",
+                tag: "example",
+                content: `
+                    <p>You can explicitly convert between types using built-in cast functions:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> input  <span class="op">=</span> <span class="str">"50"</span>
+<span class="kw">set</span> result <span class="op">=</span> <span class="fn">int</span>(input) <span class="op">+</span> <span class="num">25</span>
+<span class="fn">print</span>(result)   <span class="cmt"># 75, not "5025"</span>
+
+<span class="kw">set</span> score <span class="op">=</span> <span class="num">100</span>
+<span class="kw">set</span> msg   <span class="op">=</span> <span class="str">"Score: "</span> <span class="op">+</span> <span class="fn">str</span>(score)
+<span class="fn">print</span>(msg)      <span class="cmt"># "Score: 100"</span></pre>
+                    </div>
+                    <p>Without casting, concatenating a string and integer will produce unexpected output. Always cast when mixing types.</p>
+                `
+            },
+            {
+                title: "Printing Variables",
+                tag: "example",
+                content: `
+                    <p>Use <code>print()</code> to output values. You can print variables, strings, or expressions:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> x <span class="op">=</span> <span class="num">10</span>
+<span class="fn">print</span>(x)
+<span class="fn">print</span>(<span class="str">"Value is: "</span> <span class="op">+</span> <span class="fn">str</span>(x))
+<span class="fn">print</span>(x <span class="op">+</span> <span class="num">5</span>)  <span class="cmt"># prints 15</span></pre>
+                    </div>
+                `
+            }
+        ],
+        quiz: [
+            {
+                q: "How do you declare a variable in Link-Lang?",
+                options: ["var x = 5", "int x = 5", "set x = 5", "let x = 5"],
+                answer: 2,
+                feedback: ["That's JavaScript.", "That's C/Java. Link-Lang doesn't use type keywords.", "Correct. 'set' is always used for variable declaration.", "That's modern JavaScript. Not used in Link-Lang."]
+            },
+            {
+                q: "What is the output of: set x = \"10\"  then  print(int(x) + 5)?",
+                options: ["105", "15", "\"105\"", "Error"],
+                answer: 1,
+                feedback: ["That would happen without casting — \"10\" + 5 as strings.", "Correct. int(x) converts \"10\" to 10, then adds 5.", "No, int() converts it to an integer first.", "int() handles this cleanly in v0.4."]
+            },
+            {
+                q: "Which of these is a valid float in Link-Lang?",
+                options: ["set x = 3,14", "set x = 3.14", "set x = float(3)", "set x = 3f"],
+                answer: 1,
+                feedback: ["Commas aren't decimal points in Link-Lang.", "Correct. Standard dot notation.", "float() is a cast function, not a literal.", "The 'f' suffix isn't part of Link-Lang syntax."]
+            }
+        ]
+    },
+
+    // 2: Control Flow
+    {
+        tag: "Chapter 3",
+        title: "Control Flow",
+        desc: "Make decisions in your code using <code>if</code>, <code>elif</code>, and <code>else</code>. Link-Lang supports nested conditions too.",
+        nebulaIntro: "Decision trees. Think carefully before you branch.",
+        nebulaHelp: [
+            "The structure is: if condition → body → elif → else. Indentation separates each block.",
+            "Comparison operators: > < == are supported. != is not yet in v0.4.",
+            "Nested ifs work — just add another level of indentation inside the block."
+        ],
+        lessons: [
+            {
+                title: "if / else",
+                tag: "syntax",
+                content: `
+                    <p>The <code>if</code> statement evaluates a condition. If it's true, the indented block runs. If not, the <code>else</code> block runs instead.</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> score <span class="op">=</span> <span class="num">40</span>
+
+<span class="kw">if</span> score <span class="op">&lt;</span> <span class="num">50</span>
+    <span class="fn">print</span>(<span class="str">"Below average"</span>)
+<span class="kw">else</span>
+    <span class="fn">print</span>(<span class="str">"Above average"</span>)</pre>
+                    </div>
+                    <p>No parentheses required around the condition — though they're supported if you prefer them.</p>
+                `
+            },
+            {
+                title: "elif chains",
+                tag: "syntax",
+                content: `
+                    <p>Use <code>elif</code> to check multiple conditions in sequence. Only the first matching branch runs.</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> rank <span class="op">=</span> <span class="num">85</span>
+
+<span class="kw">if</span> rank <span class="op">&gt;</span> <span class="num">90</span>
+    <span class="fn">print</span>(<span class="str">"Rank S"</span>)
+<span class="kw">elif</span> rank <span class="op">&gt;</span> <span class="num">80</span>
+    <span class="fn">print</span>(<span class="str">"Rank A"</span>)  <span class="cmt"># This runs</span>
+<span class="kw">elif</span> rank <span class="op">&gt;</span> <span class="num">70</span>
+    <span class="fn">print</span>(<span class="str">"Rank B"</span>)
+<span class="kw">else</span>
+    <span class="fn">print</span>(<span class="str">"Rank C"</span>)</pre>
+                    </div>
+                `
+            },
+            {
+                title: "Nested Conditions",
+                tag: "example",
+                content: `
+                    <p>You can nest <code>if</code> statements inside other <code>if</code> blocks for compound logic:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> user_active <span class="op">=</span> <span class="num">1</span>
+<span class="kw">set</span> user_admin  <span class="op">=</span> <span class="num">0</span>
+
+<span class="kw">if</span> user_active <span class="op">==</span> <span class="num">1</span>
+    <span class="kw">if</span> user_admin <span class="op">==</span> <span class="num">1</span>
+        <span class="fn">print</span>(<span class="str">"Admin access"</span>)
+    <span class="kw">else</span>
+        <span class="fn">print</span>(<span class="str">"User access"</span>)  <span class="cmt"># This runs</span>
+<span class="kw">else</span>
+    <span class="fn">print</span>(<span class="str">"Inactive user"</span>)</pre>
+                    </div>
+                    <div class="info-box warn-box">
+                        <span class="icon">⚠️</span>
+                        <span>v0.4 does not yet support <code>and</code> / <code>or</code> logical operators. Use nested ifs for compound checks.</span>
+                    </div>
+                `
+            }
+        ],
+        quiz: [
+            {
+                q: "What keyword checks a secondary condition if the first if is false?",
+                options: ["else if", "elseif", "elif", "otherwise"],
+                answer: 2,
+                feedback: ["That's JavaScript/C syntax.", "No space, but still not Link-Lang.", "Correct. elif is the keyword.", "Not a Link-Lang keyword."]
+            },
+            {
+                q: "Given: set x = 75 — which branch runs?\nif x > 90 → A\nelif x > 80 → B\nelif x > 70 → C\nelse → D",
+                options: ["A", "B", "C", "D"],
+                answer: 2,
+                feedback: ["75 is not > 90.", "75 is not > 80.", "75 is > 70. Branch C runs.", "75 matches elif x > 70 before else is reached."]
+            },
+            {
+                q: "Which comparison operator is NOT available in Link-Lang v0.4?",
+                options: [">", "<", "==", "!="],
+                answer: 3,
+                feedback: ["Greater-than is supported.", "Less-than is supported.", "Equality check is supported.", "Correct. != (not-equal) is not yet in v0.4."]
+            }
+        ]
+    },
+
+    // 3: Loops
+    {
+        tag: "Chapter 4",
+        title: "Loops",
+        desc: "Repeat code blocks with <code>for</code> and <code>while</code> loops. Link-Lang also supports <code>break</code> and <code>continue</code>.",
+        nebulaIntro: "Loops. Repetitive, like your questions will be. Let's begin.",
+        nebulaHelp: [
+            "while loops run as long as the condition is true. Make sure the condition eventually becomes false.",
+            "for loops iterate over a comma-separated string or a range(n).",
+            "break exits the loop immediately. continue skips to the next iteration."
+        ],
+        lessons: [
+            {
+                title: "while loops",
+                tag: "syntax",
+                content: `
+                    <p>A <code>while</code> loop runs its block repeatedly as long as the condition remains true. Remember to update your variable inside the loop, or it will run forever.</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> x <span class="op">=</span> <span class="num">0</span>
+<span class="kw">while</span> x <span class="op">&lt;</span> <span class="num">5</span>
+    <span class="fn">print</span>(x)
+    <span class="kw">set</span> x <span class="op">=</span> x <span class="op">+</span> <span class="num">1</span>
+
+<span class="cmt"># Outputs: 0 1 2 3 4</span></pre>
+                    </div>
+                `
+            },
+            {
+                title: "for loops",
+                tag: "syntax",
+                content: `
+                    <p>Link-Lang's <code>for</code> loop can iterate over a comma-separated string list, or a numeric <code>range()</code>:</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="cmt"># Iterating a list</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="str">"1,2,3"</span>
+    <span class="fn">print</span> i
+
+<span class="cmt"># Iterating a numeric range</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>)
+    <span class="fn">print</span> i  <span class="cmt"># 0 1 2 3 4</span></pre>
+                    </div>
+                    <div class="info-box">
+                        <span class="icon">💡</span>
+                        <span><code>range(n)</code> starts at 0 and goes up to but not including <code>n</code>.</span>
+                    </div>
+                `
+            },
+            {
+                title: "break & continue",
+                tag: "example",
+                content: `
+                    <p><code>break</code> exits the loop entirely. <code>continue</code> skips the rest of the current iteration and jumps to the next one.</p>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><span class="kw">set</span> i <span class="op">=</span> <span class="num">0</span>
+<span class="kw">while</span> i <span class="op">&lt;</span> <span class="num">10</span> {
+    <span class="kw">set</span> i <span class="op">=</span> i <span class="op">+</span> <span class="num">1</span>
+
+    <span class="kw">if</span> i <span class="op">==</span> <span class="num">3</span> {
+        <span class="fn">print</span>(<span class="str">"Skipping 3..."</span>)
+        <span class="kw">continue</span>
+    }
+
+    <span class="kw">if</span> i <span class="op">==</span> <span class="num">7</span> {
+        <span class="fn">print</span>(<span class="str">"Stopping at 7!"</span>)
+        <span class="kw">break</span>
+    }
+
+    <span class="fn">print</span>(<span class="str">"Number: "</span> <span class="op">+</span> i)
+}</pre>
+                    </div>
+                    <div class="info-box">
+                        <span class="icon">📝</span>
+                        <span>Curly braces <code>{ }</code> are optionally supported as an alternative to indentation in some contexts.</span>
+                    </div>
+                `
+            }
+        ],
+        quiz: [
+            {
+                q: "What is the output of this loop?\nset x = 10\nwhile x > 5\n    print(x)\n    set x = x - 2",
+                options: ["10 8 6", "10 8 6 4", "10 8", "Infinite loop"],
+                answer: 0,
+                feedback: ["Correct. 10 → 8 → 6, then x=4 which is not > 5, loop ends.", "4 is not > 5, so the loop stops after printing 6.", "8 is still > 5, so it prints 6 too.", "x decrements each time, so it terminates."]
+            },
+            {
+                q: "What does range(4) produce?",
+                options: ["1 2 3 4", "0 1 2 3", "0 1 2 3 4", "1 2 3"],
+                answer: 1,
+                feedback: ["range() starts at 0, not 1.", "Correct. 0 through 3 — four values, starting from 0.", "range(4) stops before 4, not at 4.", "range() always starts at 0."]
+            },
+            {
+                q: "What does 'continue' do inside a loop?",
+                options: ["Exits the loop entirely", "Restarts the program", "Skips the rest of the current iteration", "Pauses execution"],
+                answer: 2,
+                feedback: ["That's break, not continue.", "No — it only affects the current iteration.", "Correct. continue jumps to the next loop cycle.", "No such pause mechanic in Link-Lang."]
+            }
+        ]
+    }
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentChapter = 0;
+let completedChapters = new Set();
+let helpIndex = 0;
+
+const SPRITES = {
+    neutral  : "images/nebula_logo3.png",
+    cheerful : "images/nebula_logo2.png",
+    think    : "images/nebula_logo5.png",
+    poked    : "images/nebula_poked.png"
+};
+
+// ── BETA DISMISS ──────────────────────────────────────────────────────────────
+function dismissBeta() {
+    const overlay = document.getElementById('beta-overlay');
+    overlay.classList.add('hidden');
+    setTimeout(() => overlay.style.display = 'none', 400);
+    document.getElementById('bg-audio').play().catch(() => {});
+    setSprite('neutral');
+    speak("Welcome. Let us not waste time.");
+}
+
+// ── NEBULA ────────────────────────────────────────────────────────────────────
+function setSprite(key) {
+    const el = document.getElementById('neb-sprite');
+    el.src = SPRITES[key];
+}
+
+let speechTimer;
+function speak(text, sprite) {
+    const el = document.getElementById('speech-bubble');
+    if (sprite) setSprite(sprite);
+    el.style.opacity = '0';
+    setTimeout(() => {
+        el.textContent = text;
+        el.style.opacity = '1';
+    }, 180);
+    clearTimeout(speechTimer);
+    speechTimer = setTimeout(() => {
+        // return to neutral quote after a while
+    }, 8000);
+}
+
+function askHelp() {
+    const ch = chapters[currentChapter];
+    const hints = ch.nebulaHelp;
+    speak(hints[helpIndex % hints.length], 'think');
+    helpIndex++;
+}
+
+// ── CHAPTER RENDER ────────────────────────────────────────────────────────────
+function goToChapter(idx) {
+    currentChapter = idx;
+    helpIndex = 0;
+    updateNav();
+    renderChapter();
+    speak(chapters[idx].nebulaIntro, 'neutral');
+    updateProgress();
+    document.getElementById('main').scrollTop = 0;
+}
+
+function updateNav() {
+    chapters.forEach((_, i) => {
+        const btn = document.getElementById('nav-' + i);
+        btn.classList.remove('active');
+        if (completedChapters.has(i)) btn.classList.add('done');
+        else btn.classList.remove('done');
+    });
+    document.getElementById('nav-' + currentChapter).classList.add('active');
+}
+
+function updateProgress() {
+    const pct = (completedChapters.size / chapters.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function renderChapter() {
+    const ch = chapters[currentChapter];
+    let html = `
+        <div class="chapter-header">
+            <div class="ch-tag">${ch.tag}</div>
+            <h1>${ch.title}</h1>
+            <p class="ch-desc">${ch.desc}</p>
+        </div>
+    `;
+
+    ch.lessons.forEach((lesson, li) => {
+        const tagClass = lesson.tag === 'syntax' ? 'tag-syntax' : lesson.tag === 'example' ? 'tag-example' : 'tag-note';
+        html += `
+            <div class="lesson-card" id="lesson-${li}">
+                <h2>${lesson.title} <span class="tag ${tagClass}">${lesson.tag}</span></h2>
+                ${lesson.content}
+            </div>
+        `;
+    });
+
+    // Quiz
+    html += `<div class="quiz-section" id="quiz-section">
+        <h2>🎓 Chapter Quiz</h2>
+        <div class="quiz-sub">Answer all questions. Nebula is judging.</div>
+    `;
+
+    ch.quiz.forEach((q, qi) => {
+        html += `
+        <div class="quiz-q" id="quiz-${qi}">
+            <div class="q-text">${q.q.replace(/\n/g, '<br>')}</div>
+            <div class="quiz-options">
+                ${q.options.map((opt, oi) => `
+                    <div class="q-opt" id="opt-${qi}-${oi}" onclick="selectOpt(${qi},${oi})">
+                        <div class="radio-dot"></div>
+                        <span>${opt}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="quiz-feedback" id="fb-${qi}"></div>
+            <button class="aero-btn check-btn" onclick="checkAnswer(${qi})">Check</button>
+        </div>
+        `;
+    });
+
+    html += `
+        <div class="quiz-score" id="quiz-score"></div>
+    </div>`;
+
+    // Nav footer
+    const isLast = currentChapter === chapters.length - 1;
+    const isFirst = currentChapter === 0;
+    html += `
+        <div class="chapter-nav-footer">
+            <button class="aero-btn btn-ghost" onclick="goToChapter(${currentChapter - 1})" ${isFirst ? 'style="visibility:hidden"' : ''}>← Previous</button>
+            <span class="prog-text">${currentChapter + 1} of ${chapters.length}</span>
+            <button class="aero-btn ${isLast ? 'btn-orange' : ''}" onclick="${isLast ? 'finishAcademy()' : 'goToChapter(' + (currentChapter + 1) + ')'}">
+                ${isLast ? '🎓 Finish' : 'Next →'}
+            </button>
+        </div>
+    `;
+
+    document.getElementById('main').innerHTML = html;
+    window._selectedAnswers = {};
+    window._answeredQuestions = {};
+}
+
+// ── QUIZ LOGIC ────────────────────────────────────────────────────────────────
+function selectOpt(qi, oi) {
+    if (window._answeredQuestions[qi]) return;
+    const ch = chapters[currentChapter];
+    const numOpts = ch.quiz[qi].options.length;
+    for (let i = 0; i < numOpts; i++) {
+        document.getElementById(`opt-${qi}-${i}`).classList.remove('selected');
+    }
+    document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+    window._selectedAnswers[qi] = oi;
+}
+
+function checkAnswer(qi) {
+    if (window._answeredQuestions[qi]) return;
+    const selected = window._selectedAnswers[qi];
+    if (selected === undefined) {
+        speak("You haven't selected anything. Remarkable.", 'poked');
+        return;
+    }
+    const ch = chapters[currentChapter];
+    const q = ch.quiz[qi];
+    const correct = selected === q.answer;
+    window._answeredQuestions[qi] = true;
+
+    // Lock all options
+    const numOpts = q.options.length;
+    for (let i = 0; i < numOpts; i++) {
+        const el = document.getElementById(`opt-${qi}-${i}`);
+        el.classList.add('locked');
+        if (i === q.answer) el.classList.add('correct');
+        else if (i === selected && !correct) el.classList.add('wrong');
+    }
+
+    const fb = document.getElementById(`fb-${qi}`);
+    fb.textContent = q.feedback[selected];
+    fb.className = 'quiz-feedback ' + (correct ? 'good' : 'bad');
+
+    if (correct) {
+        speak("Acceptable. Move on.", 'cheerful');
+    } else {
+        speak("Incorrect. Read the lesson again.", 'poked');
+    }
+
+    checkQuizComplete();
+}
+
+function checkQuizComplete() {
+    const ch = chapters[currentChapter];
+    const total = ch.quiz.length;
+    const answered = Object.keys(window._answeredQuestions).length;
+    if (answered < total) return;
+
+    const correct = ch.quiz.filter((q, qi) => window._selectedAnswers[qi] === q.answer).length;
+    const scoreEl = document.getElementById('quiz-score');
+    scoreEl.style.display = 'block';
+
+    if (correct === total) {
+        scoreEl.innerHTML = `✅ <strong>Perfect — ${correct}/${total}.</strong> I'm mildly impressed.`;
+        speak("Full marks. I'll allow it.", 'cheerful');
+        completedChapters.add(currentChapter);
+        updateNav();
+        updateProgress();
+    } else if (correct >= Math.ceil(total / 2)) {
+        scoreEl.innerHTML = `✅ <strong>${correct}/${total} correct.</strong> Passable, I suppose.`;
+        speak(`${correct} out of ${total}. Could be worse.`, 'neutral');
+        completedChapters.add(currentChapter);
+        updateNav();
+        updateProgress();
+    } else {
+        scoreEl.innerHTML = `❌ <strong>${correct}/${total} correct.</strong> Revisit the lesson material.`;
+        speak(`${correct} out of ${total}. Disappointing.`, 'poked');
+    }
+}
+
+function finishAcademy() {
+    speak("You have completed the academy curriculum. Whether you retained any of it is another matter.", 'cheerful');
+    document.getElementById('main').innerHTML += `
+        <div class="lesson-card" style="text-align:center; margin-top:24px; border-color: rgba(140,198,63,0.5); background: linear-gradient(145deg, rgba(140,198,63,0.1), rgba(255,255,255,0.7));">
+            <h2 style="justify-content:center;">🎓 Training Complete</h2>
+            <p>You've completed the Link-Lang Academy beta curriculum. The language is still evolving — check the <a href="https://github.com/Pilot0253/link-lang" target="_blank" style="color:var(--nebula-blue);">GitHub repository</a> for updates.</p>
+            <br>
+            <button class="aero-btn btn-green" onclick="window.location.href='index.html'">Return to Nebania HQ</button>
+        </div>
+    `;
+}
+
+// ── COPY CODE ─────────────────────────────────────────────────────────────────
+function copyCode(btn) {
+    const pre = btn.nextElementSibling;
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderChapter();
+</script>
+</body>
+</html>
