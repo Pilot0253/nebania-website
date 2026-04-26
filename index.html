@@ -272,6 +272,56 @@
             border: 1px solid rgba(0,200,80,0.3); border-radius: 10px; padding: 1px 9px; margin-bottom: 8px;
         }
         /* Redirect note shown below external-link buttons */
+        /* ── ACHIEVEMENTS & EASTER EGGS ── */
+
+        /* Achievement toast — slides in from bottom-right */
+        #achievement-toast {
+            position: fixed; bottom: 70px; right: -380px;
+            width: 340px; z-index: 10000;
+            background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(220,240,255,0.88));
+            border: 1px solid rgba(255,255,255,0.98); border-radius: 18px;
+            padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.22),
+                        inset 0 1px 0 rgba(255,255,255,0.9),
+                        inset 0 0 0 1px rgba(255,255,255,0.5);
+            backdrop-filter: blur(18px);
+            transition: right 0.55s cubic-bezier(0.22,1,0.36,1);
+        }
+        #achievement-toast.show { right: 20px; }
+        .ach-icon { font-size: 28px; flex-shrink: 0; }
+        .ach-body { flex: 1; min-width: 0; }
+        .ach-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+            color: #007aff; text-transform: uppercase; margin: 0 0 2px; }
+        .ach-title { font-size: 15px; font-weight: 700; color: #111; margin: 0 0 2px; }
+        .ach-desc  { font-size: 11px; color: #555; margin: 0; line-height: 1.4; }
+
+        /* YNSIC fullscreen video overlay */
+        #ynsic-overlay {
+            position: fixed; inset: 0; z-index: 10001;
+            background: #000; display: none;
+            align-items: center; justify-content: center;
+        }
+        #ynsic-overlay.active { display: flex; }
+        #ynsic-video { width: 100%; height: 100%; object-fit: contain; }
+        #ynsic-skip {
+            position: absolute; bottom: 30px; right: 30px;
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.7); padding: 8px 20px; border-radius: 20px;
+            cursor: pointer; font-size: 12px; backdrop-filter: blur(6px);
+            transition: .2s;
+        }
+        #ynsic-skip:hover { background: rgba(255,255,255,0.3); color: #fff; }
+
+        /* Tux on the desk */
+        #tux-egg {
+            position: fixed; bottom: 400px; left: 452px;
+            width: 80px; height: auto; z-index: 22;
+            display: none; cursor: pointer;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+            transition: opacity .5s, transform .5s;
+            opacity: 0; transform: translateY(20px);
+        }
+
         .redirect-note {
             font-size: 10px; color: rgba(0,0,0,0.35); text-align: center;
             margin: 3px 0 0; letter-spacing: 0.01em;
@@ -446,6 +496,114 @@
         }
         .ann-close:hover { background: rgba(255,255,255,0.25); color: #fff; }
 
+        /* ── BOOT SEQUENCE ── */
+        #boot-wash {
+            position: fixed; inset: 0; z-index: 9997;
+            background: #fff; opacity: 0; pointer-events: none;
+            transition: opacity 1.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        #boot-screen {
+            position: fixed; inset: 0; z-index: 9998;
+            background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+        }
+        #boot-screen.active { opacity: 1; pointer-events: all; }
+        #boot-orb {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%) scale(0);
+            width: 120px; height: 120px; border-radius: 50%;
+            background: radial-gradient(circle, #fff 0%, #c8eeff 35%, #7ac8ff 65%, transparent 100%);
+            box-shadow: 0 0 60px 30px rgba(180,230,255,0.9), 0 0 120px 60px rgba(100,200,255,0.6), 0 0 240px 120px rgba(50,150,255,0.3);
+            transition: transform 1.4s cubic-bezier(0.16,1,0.3,1), opacity 0.8s ease;
+            opacity: 0;
+        }
+        #boot-flare {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 2px; height: 100vh;
+            background: linear-gradient(to bottom, transparent 0%, rgba(200,240,255,0.4) 45%, rgba(255,255,255,0.9) 50%, rgba(200,240,255,0.4) 55%, transparent 100%);
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        #boot-flare::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%) rotate(90deg);
+            width: 100vw; height: 2px; background: inherit;
+        }
+        #boot-logo {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-40%); text-align: center;
+            opacity: 0; transition: opacity 0.9s ease, transform 1.1s cubic-bezier(0.22,1,0.36,1);
+        }
+        #boot-logo h1 {
+            font-size: 3.5rem; font-weight: 200; letter-spacing: 0.4em;
+            color: #003a6e; margin: 0;
+            text-shadow: 0 0 30px rgba(0,120,255,0.4), 0 2px 8px rgba(0,0,0,0.08);
+        }
+        #boot-logo p { color: #5599cc; font-size: 0.8rem; letter-spacing: 0.3em; margin: 6px 0 0; }
+        #boot-logo.visible { opacity: 1; transform: translate(-50%,-50%); }
+        .boot-ripple {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%) scale(0);
+            border-radius: 50%; border: 1px solid rgba(100,200,255,0.5);
+        }
+        @keyframes ripple-expand {
+            0%   { transform: translate(-50%,-50%) scale(0); opacity: 0.7; }
+            100% { transform: translate(-50%,-50%) scale(8); opacity: 0; }
+        }
+
+        /* ── SHUTDOWN SEQUENCE ── */
+        #shutdown-screen {
+            position: fixed; inset: 0; z-index: 9998;
+            background: #fff;
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+        }
+        #shutdown-orb {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%) scale(1);
+            width: 120px; height: 120px; border-radius: 50%;
+            background: radial-gradient(circle, #fff 0%, #c8eeff 35%, #7ac8ff 65%, transparent 100%);
+            box-shadow: 0 0 60px 30px rgba(180,230,255,0.9), 0 0 120px 60px rgba(100,200,255,0.6);
+            transition: transform 1.2s cubic-bezier(0.4,0,1,1), opacity 0.8s ease;
+            opacity: 1;
+        }
+        #shutdown-logo {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%); text-align: center;
+            transition: opacity 0.9s ease, transform 1.0s cubic-bezier(0.4,0,0.6,1);
+        }
+        #shutdown-logo h1 {
+            font-size: 3.5rem; font-weight: 200; letter-spacing: 0.4em;
+            color: #003a6e; margin: 0;
+            text-shadow: 0 0 30px rgba(0,120,255,0.4);
+        }
+        #shutdown-logo p { color: #5599cc; font-size: 0.8rem; letter-spacing: 0.3em; margin: 6px 0 0; }
+
+        /* Leave button style */
+        .leave-btn {
+            border-color: rgba(255,80,80,0.5); color: rgba(255,100,100,0.9);
+        }
+        .leave-btn:hover { background: rgba(200,30,30,0.75); color: #fff; border-color: rgba(255,80,80,0.8); }
+
+        /* Achievement counter in overlay */
+        #overlay-ach-counter {
+            position: absolute; bottom: 28px; right: 32px;
+            display: flex; align-items: center; gap: 8px;
+            color: rgba(255,255,255,0.55); font-size: 12px; letter-spacing: 0.08em;
+        }
+        #overlay-ach-counter span {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px; padding: 3px 12px; font-weight: 700;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Animations toggle on splash — separate from mute */
+        .splash-anim-toggle {
+            display: flex; align-items: center; gap: 10px;
+            color: #6a9abf; font-size: 13px; margin-bottom: 14px; cursor: pointer;
+        }
+
         /* ── VISITOR OVERLAY ── */
         #visitor-overlay {
             display: none; position: fixed; inset: 0; z-index: 4000;
@@ -463,6 +621,10 @@
         <div class="mute-pill" id="mutePill"></div>
         <span id="muteLabel">Audio: ON</span>
     </label>
+    <label class="splash-anim-toggle" onclick="toggleAnimations()">
+        <div class="mute-pill" id="animPill"></div>
+        <span id="animLabel">Boot Animation: ON</span>
+    </label>
     <button class="splash-btn" onclick="startExperience()">INITIALIZE</button>
     <div class="splash-footer">
         <a href="fallback.html">📄 HTML Only Version</a>
@@ -470,11 +632,26 @@
     </div>
 </div>
 
+<!-- ═══════════════ BOOT / SHUTDOWN SCREENS ═══════════════ -->
+<div id="boot-wash"></div>
+<div id="boot-screen">
+    <div id="boot-orb"></div>
+    <div id="boot-flare"></div>
+    <div class="boot-ripple" id="ripple1" style="width:200px;height:200px;"></div>
+    <div class="boot-ripple" id="ripple2" style="width:200px;height:200px;"></div>
+    <div class="boot-ripple" id="ripple3" style="width:200px;height:200px;"></div>
+    <div id="boot-logo"><h1>NEBANIA HQ</h1><p>v5.3 "Penthouse" Build</p></div>
+</div>
+<div id="shutdown-screen">
+    <div id="shutdown-orb"></div>
+    <div id="shutdown-logo"><h1>NEBANIA HQ</h1><p>Until next time.</p></div>
+</div>
+
 <!-- ═══════════════ OVERLAYS ═══════════════ -->
 <div id="transition-white"></div>
 
 <div id="system-overlay">
-    <div style="text-align:center;width:100%;">
+    <div style="text-align:center;width:100%;position:relative;">
         <h1 class="overlay-title">SYSTEM DIRECTORY</h1>
         <div class="nav-grid">
             <div class="nav-card" onclick="changeRoom('lobby')"><h3>📍 Main Lobby</h3><p>Central Hub</p></div>
@@ -485,6 +662,8 @@
             <div class="nav-card" onclick="handleRedirect('https://nebania.site/academy','Redirecting to Academy...')"><h3>🎓 Nebania Academy</h3><p>Learn Link-Lang</p></div>
         </div>
         <button class="return-btn" onclick="toggleMenu(false)">RETURN TO AREA</button>
+        <button class="return-btn leave-btn" onclick="leaveExperience()">LEAVE</button>
+        <div id="overlay-ach-counter">🏆 Achievements <span id="ach-count">0 / 7</span></div>
     </div>
 </div>
 
@@ -525,6 +704,10 @@
 
 <!-- GIFT SHOP COUNTER IMAGE — in front of Nebula, left side -->
 <img src="images/giftshopcounter.png" id="gs-counter-img" alt="">
+
+<!-- TUX easter egg — sits on the desk, hidden until triggered -->
+<img src="secrets/Tux.png" id="tux-egg" alt="Tux" onclick="boopTux()">
+
 
 <!-- GIFT SHOP STORE — right side -->
 <div id="gs-store">
@@ -615,6 +798,22 @@
     <span class="ann-icon" id="ann-icon">📢</span>
     <span class="ann-text" id="ann-text"></span>
     <button class="ann-close" onclick="dismissAnnouncement()" title="Dismiss">✕</button>
+</div>
+
+<!-- ACHIEVEMENT TOAST -->
+<div id="achievement-toast">
+    <div class="ach-icon" id="ach-icon">🏆</div>
+    <div class="ach-body">
+        <div class="ach-eyebrow">Achievement Unlocked</div>
+        <div class="ach-title" id="ach-title"></div>
+        <div class="ach-desc"  id="ach-desc"></div>
+    </div>
+</div>
+
+<!-- YNSIC FULLSCREEN OVERLAY -->
+<div id="ynsic-overlay">
+    <video id="ynsic-video" playsinline></video>
+    <button id="ynsic-skip" onclick="closeYnsic()">Skip ✕</button>
 </div>
 
 <audio id="main-audio" loop></audio>
@@ -712,12 +911,12 @@ const rooms = {
         actions: `
         <div class="aero-panel show"><p class="panel-title" style="color:#8833bb;">Random History</p><p class="panel-sub">Pull a random wiki entry.</p><button class="aero-btn btn-purple" onclick="handleRedirect('https://en.wikipedia.org/wiki/Special:Random','Querying Database...')">Access Data</button><p class="redirect-note">↗ Opens in new window</p></div>
         <div class="aero-panel show"><p class="panel-title" style="color:#00b894;">Local Exhibits</p><p class="panel-sub">Curated artifacts.</p>
-            <select class="aero-btn" style="background:linear-gradient(180deg,#55aadd,#2d3436);color:#fff;border:1px solid #00b894;" onchange="openExhibit(this.value);this.value=''">
-                <option value="" disabled selected>Select Exhibit...</option>
-                <option value="bonzi">Bonzi Buddy</option>
-                <option value="frutiger">Frutiger Aero</option>
-                <option value="web1">The First Website</option>
-                <option value="y2k">Y2K Paranoia</option>
+            <select class="aero-btn" style="background:#3a3a3a;color:#fff;border:1px solid #00b894;" onchange="openExhibit(this.value);this.value=''">
+                <option value="" disabled selected style="background:#3a3a3a;color:#fff;">Select Exhibit...</option>
+                <option value="bonzi" style="background:#3a3a3a;color:#fff;">Bonzi Buddy</option>
+                <option value="frutiger" style="background:#3a3a3a;color:#fff;">Frutiger Aero</option>
+                <option value="web1" style="background:#3a3a3a;color:#fff;">The First Website</option>
+                <option value="y2k" style="background:#3a3a3a;color:#fff;">Y2K Paranoia</option>
             </select>
         </div>`
     }
@@ -725,7 +924,7 @@ const rooms = {
 
 /* ═══════════════ STATE ═══════════════ */
 let currentRoom = 'lobby', pokeCount = 0, isAngry = false, cookieCount = 0;
-let muteOnStart = false, carouselIdx = 0;
+let muteOnStart = false, skipAnimations = false, carouselIdx = 0;
 const N = VAULT_CARDS.length;
 const CAROUSEL_RADIUS = 480;
 const angleStep = 360 / N;
@@ -743,31 +942,221 @@ function toggleMute() {
     document.getElementById('muteLabel').textContent = muteOnStart ? 'Audio: OFF' : 'Audio: ON';
 }
 
+function toggleAnimations() {
+    skipAnimations = !skipAnimations;
+    document.getElementById('animPill').classList.toggle('off', skipAnimations);
+    document.getElementById('animLabel').textContent = skipAnimations ? 'Boot Animation: OFF' : 'Boot Animation: ON';
+}
+
 function startExperience() {
     if (muteOnStart) { audioEl.muted = true; audioEl.volume = 0; }
+
     const splash = document.getElementById('splash');
     splash.style.opacity = '0';
-    setTimeout(() => splash.style.display = 'none', 1000);
+    setTimeout(() => splash.style.display = 'none', 600);
 
-    // Show announcement banner if enabled
-    if (ANNOUNCEMENT.enabled) {
-        const icons = { info: '📢', warning: '⚠️', maintenance: '🔧' };
-        const el = document.getElementById('announcement');
-        document.getElementById('ann-icon').textContent = icons[ANNOUNCEMENT.type] || '📢';
-        document.getElementById('ann-text').innerHTML = ANNOUNCEMENT.message;
-        el.className = ANNOUNCEMENT.type !== 'info' ? `ann-${ANNOUNCEMENT.type}` : '';
-        el.classList.add('visible');
+    // ── MUTED: skip both animation and sound entirely ─────────────────────────
+    if (muteOnStart) {
+        setTimeout(() => {
+            document.getElementById('bg-lobby').classList.add('active');
+            railEl.innerHTML = rooms.lobby.actions;
+            updateWalkman('lobby');
+            showAnnouncement();
+            setSprite(sprites.bow); speak("Welcome to Nebania HQ.");
+            setTimeout(() => { setSprite(sprites.process); speak("I will work hard to assist you!"); }, 2000);
+            setTimeout(() => { setSprite(sprites.neutral); speak("Systems Online. Awaiting input."); }, 4500);
+        }, 700);
+        return;
     }
 
-    document.getElementById('bg-lobby').classList.add('active');
-    railEl.innerHTML = rooms.lobby.actions;
-    if (!muteOnStart) playAudio('lobby'); else updateWalkman('lobby');
-    setSprite(sprites.bow); speak("Welcome to Nebania HQ.");
-    setTimeout(() => { setSprite(sprites.process); speak("I will work hard to assist you!"); setTimeout(() => { setSprite(sprites.neutral); speak("Systems Online. Awaiting input."); }, 2500); }, 2000);
+    // ── ANIMATIONS OFF: play boot sound, but skip visuals ────────────────────
+    if (skipAnimations) {
+        const bootSnd = new Audio('audio/boot.wav');
+        bootSnd.volume = 1.0;
+        bootSnd.play().catch(() => {});
+        setTimeout(() => {
+            document.getElementById('bg-lobby').classList.add('active');
+            railEl.innerHTML = rooms.lobby.actions;
+            playAudio('lobby');
+            showAnnouncement();
+            setSprite(sprites.bow); speak("Welcome to Nebania HQ.");
+            setTimeout(() => { setSprite(sprites.process); speak("I will work hard to assist you!"); }, 2000);
+            setTimeout(() => { setSprite(sprites.neutral); speak("Systems Online. Awaiting input."); }, 4500);
+        }, 700);
+        return;
+    }
+
+    // ── SOUND ON: full boot sequence ─────────────────────────────────────────
+    const bootSnd = new Audio('audio/boot.wav');
+    bootSnd.volume = 1.0;
+    bootSnd.play().catch(() => {});
+
+    const bootScreen = document.getElementById('boot-screen');
+    const bootOrb    = document.getElementById('boot-orb');
+    const bootFlare  = document.getElementById('boot-flare');
+    const bootLogo   = document.getElementById('boot-logo');
+    const bootWash   = document.getElementById('boot-wash');
+
+    bootScreen.classList.add('active');
+
+    setTimeout(() => {
+        bootOrb.style.opacity = '1';
+        bootOrb.style.transform = 'translate(-50%,-50%) scale(1)';
+    }, 400);
+
+    setTimeout(() => {
+        ['ripple1','ripple2','ripple3'].forEach((id, i) => {
+            setTimeout(() => {
+                document.getElementById(id).style.animation = 'ripple-expand 1.6s cubic-bezier(0.2,0.6,0.4,1) forwards';
+            }, i * 220);
+        });
+    }, 900);
+
+    setTimeout(() => {
+        bootFlare.style.opacity = '1';
+        setTimeout(() => bootFlare.style.opacity = '0', 350);
+    }, 1100);
+
+    setTimeout(() => { bootLogo.classList.add('visible'); }, 1500);
+
+    setTimeout(() => {
+        bootFlare.style.opacity = '0.7';
+        bootOrb.style.transform = 'translate(-50%,-50%) scale(1.3)';
+        setTimeout(() => { bootFlare.style.opacity = '0'; }, 400);
+    }, 3800);
+
+    setTimeout(() => {
+        bootWash.style.opacity = '1';
+        bootLogo.style.opacity = '0';
+    }, 4800);
+
+    setTimeout(() => {
+        bootScreen.style.transition = 'opacity 0.4s';
+        bootScreen.style.opacity = '0';
+        document.getElementById('bg-lobby').classList.add('active');
+        railEl.innerHTML = rooms.lobby.actions;
+        playAudio('lobby');
+        showAnnouncement();
+        setTimeout(() => {
+            bootWash.style.opacity = '0';
+            bootScreen.style.display = 'none';
+        }, 100);
+        setTimeout(() => { setSprite(sprites.bow); speak("Welcome to Nebania HQ."); }, 600);
+        setTimeout(() => { setSprite(sprites.process); speak("I will work hard to assist you!"); }, 2800);
+        setTimeout(() => { setSprite(sprites.neutral); speak("Systems Online. Awaiting input."); }, 5000);
+    }, 5800);
+}
+
+function showAnnouncement() {
+    if (!ANNOUNCEMENT.enabled) return;
+    const icons = { info: '📢', warning: '⚠️', maintenance: '🔧' };
+    const el = document.getElementById('announcement');
+    document.getElementById('ann-icon').textContent = icons[ANNOUNCEMENT.type] || '📢';
+    document.getElementById('ann-text').innerHTML = ANNOUNCEMENT.message;
+    el.className = ANNOUNCEMENT.type !== 'info' ? `ann-${ANNOUNCEMENT.type}` : '';
+    el.classList.add('visible');
 }
 
 function dismissAnnouncement() {
     document.getElementById('announcement').classList.remove('visible');
+}
+
+function leaveExperience() {
+    toggleMenu(false);
+
+    // ── Shared reset helper ───────────────────────────────────────────────────
+    function resetState(delay) {
+        setTimeout(() => {
+            if (currentRoom === 'vault')    setVaultMode(false);
+            if (currentRoom === 'giftshop') setGiftShopMode(false);
+            currentRoom = 'lobby';
+            audioEl.src = '';
+            document.querySelectorAll('.bg-layer').forEach(el => el.classList.remove('active','bloom-effect','shop-blur'));
+            document.getElementById('nebula-stage').classList.remove('vault-corner','shop-mode');
+            document.getElementById('gs-counter-img').classList.remove('visible');
+            document.getElementById('gs-store').classList.remove('visible');
+            document.getElementById('vault-creds').style.display = 'none';
+            document.getElementById('announcement').classList.remove('visible');
+            railEl.innerHTML = '';
+            speechEl.classList.remove('visible');
+            setTimeout(() => { location.reload(); }, 900);
+        }, delay);
+    }
+
+    // ── MUTED: no sound, no animation — just reset immediately ───────────────
+    if (muteOnStart) {
+        audioEl.pause(); audioEl.src = '';
+        resetState(400);
+        return;
+    }
+
+    // ── Fade out room audio first (both paths need this) ─────────────────────
+    function fadeOutThen(callback) {
+        if (audioEl.volume > 0) {
+            const startVol = audioEl.volume;
+            const steps = 20, stepTime = 600 / steps;
+            let step = 0;
+            const fade = setInterval(() => {
+                step++;
+                audioEl.volume = Math.max(0, startVol * (1 - step / steps));
+                if (step >= steps) { clearInterval(fade); audioEl.pause(); audioEl.src = ''; callback(); }
+            }, stepTime);
+        } else {
+            audioEl.pause(); audioEl.src = ''; callback();
+        }
+    }
+
+    // ── ANIMATIONS OFF: play shutdown sound, skip visuals, reload faster ─────
+    if (skipAnimations) {
+        fadeOutThen(() => {
+            const shutSnd = new Audio('audio/shutdown.wav');
+            shutSnd.volume = 1.0;
+            shutSnd.play().catch(() => {});
+        });
+        resetState(1800);
+        return;
+    }
+
+    // ── FULL SEQUENCE: animations + sound ────────────────────────────────────
+    const shutScreen = document.getElementById('shutdown-screen');
+    const shutOrb    = document.getElementById('shutdown-orb');
+    const shutLogo   = document.getElementById('shutdown-logo');
+
+    shutOrb.style.transition  = 'none';
+    shutOrb.style.transform   = 'translate(-50%,-50%) scale(1)';
+    shutOrb.style.opacity     = '1';
+    shutLogo.style.transition = 'none';
+    shutLogo.style.opacity    = '1';
+    shutLogo.style.transform  = 'translate(-50%,-50%)';
+
+    shutScreen.style.opacity       = '0';
+    shutScreen.style.pointerEvents = 'all';
+    shutScreen.style.display       = 'flex';
+
+    fadeOutThen(() => {
+        const shutSnd = new Audio('audio/shutdown.wav');
+        shutSnd.volume = 1.0;
+        shutSnd.play().catch(() => {});
+    });
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        shutScreen.style.transition = 'opacity 0.9s ease';
+        shutScreen.style.opacity = '1';
+    }));
+
+    setTimeout(() => {
+        shutLogo.style.transition = 'opacity 0.9s ease, transform 1.0s cubic-bezier(0.4,0,0.6,1)';
+        shutLogo.style.transform  = 'translate(-50%,-38%)';
+        shutLogo.style.opacity    = '0';
+    }, 1200);
+
+    setTimeout(() => {
+        shutOrb.style.transition = 'transform 1.2s cubic-bezier(0.4,0,1,1), opacity 0.8s ease';
+        shutOrb.style.transform  = 'translate(-50%,-50%) scale(0)';
+        shutOrb.style.opacity    = '0';
+    }, 1600);
+
+    resetState(3800);
 }
 
 /* ═══════════════ VAULT CAROUSEL ═══════════════ */
@@ -877,6 +1266,14 @@ function changeRoom(roomId) {
     const whiteOut = document.getElementById('transition-white');
     whiteOut.style.opacity = '1';
     if (!isAngry) setSprite(sprites.thinking);
+
+    // Track visited rooms for Explorer achievement
+    if (!window._visitedRooms) window._visitedRooms = new Set(['lobby']);
+    window._visitedRooms.add(roomId);
+    const allRooms = ['lobby','hall','giftshop','museum','vault'];
+    if (allRooms.every(r => window._visitedRooms.has(r))) {
+        setTimeout(() => unlockAchievement('explorer', '🗺️', 'Explorer', '¡Lo hicimos!'), 1200);
+    }
 
     setTimeout(() => {
         if (currentRoom === 'vault') setVaultMode(false);
@@ -1059,6 +1456,177 @@ function playAudio(trackName) {
         }
     }, 50);
 }
+
+/* ═══════════════ ACHIEVEMENTS ═══════════════ */
+
+const earnedAchievements = new Set();
+
+function unlockAchievement(id, icon, title, desc) {
+    if (earnedAchievements.has(id)) return;
+    earnedAchievements.add(id);
+
+    // Update counter
+    const total = 7; // increment this if you add more achievements
+    document.getElementById('ach-count').textContent = `${earnedAchievements.size} / ${total}`;
+
+    if (!muteOnStart) {
+        const snd = new Audio('secrets/achieve.mp3');
+        snd.volume = 0.9;
+        snd.play().catch(() => {});
+    }
+
+    const toast  = document.getElementById('achievement-toast');
+    document.getElementById('ach-icon').textContent  = icon;
+    document.getElementById('ach-title').textContent = title;
+    document.getElementById('ach-desc').textContent  = desc;
+
+    toast.classList.add('show');
+    clearTimeout(window._achTimer);
+    window._achTimer = setTimeout(() => toast.classList.remove('show'), 5500);
+}
+
+/* ═══════════════ EASTER EGG 1 — 100 COOKIES → TUX ═══════════════ */
+// Tux fades in on the gift shop counter; clicking him plays a boop
+
+function boopTux() {
+    if (!muteOnStart) {
+        const boop = new Audio('secrets/Boop.mp3');
+        boop.volume = 1.0;
+        boop.play().catch(() => {});
+    }
+}
+
+(function() {
+    let tuxShown = false;
+    const _origBuyCookie = window.buyCookie;
+    window.buyCookie = function() {
+        _origBuyCookie();
+        if (cookieCount >= 100 && !tuxShown && currentRoom === 'giftshop') {
+            tuxShown = true;
+            const tux = document.getElementById('tux-egg');
+            tux.style.display = 'block';
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                tux.style.opacity = '1';
+                tux.style.transform = 'translateY(0)';
+            }));
+            setSprite(sprites.thinking);
+            speak("...Is that a penguin on my counter? Who authorised this?");
+            setTimeout(() => setSprite(sprites.neutral), 4000);
+            unlockAchievement('tux', '🐧', 'Tux', "What's there to say? It's Tux.");
+        }
+    };
+
+    // Hide Tux when leaving the gift shop
+    const _origSetGiftShop = window.setGiftShopMode;
+    window.setGiftShopMode = function(on) {
+        _origSetGiftShop(on);
+        if (!on) {
+            const tux = document.getElementById('tux-egg');
+            tux.style.opacity = '0';
+            tux.style.transform = 'translateY(20px)';
+            setTimeout(() => tux.style.display = 'none', 500);
+            tuxShown = false;
+        }
+    };
+})();
+
+/* ═══════════════ EASTER EGG 2 — WALKMAN CLICKS → YNSIC ═══════════════ */
+(function() {
+    let clicks = 0;
+    const lines = ["You'll", "Never", "See"];
+    let ynsicPlayed = false;
+
+    document.getElementById('walkman').addEventListener('click', () => {
+        // Ignore if already played this session
+        if (ynsicPlayed) return;
+        clicks++;
+
+        if (clicks <= 3) {
+            setSprite(sprites.thinking);
+            speak(lines[clicks - 1]);
+            setTimeout(() => setSprite(sprites.neutral), 2000);
+        }
+
+        if (clicks === 4) {
+            ynsicPlayed = true;
+            unlockAchievement('arcana', '🃏', 'Nebania Arcana', "Igor tried to hide this one. Too powerful.");
+            setTimeout(() => openYnsic(), 800);
+        }
+    });
+})();
+
+function openYnsic() {
+    const overlay = document.getElementById('ynsic-overlay');
+    const video   = document.getElementById('ynsic-video');
+    overlay.classList.add('active');
+    video.src = 'secrets/ynsic.MP4';
+    video.muted = muteOnStart;
+    video.play().catch(() => {});
+    video.onended = () => closeYnsic();
+}
+
+function closeYnsic() {
+    const overlay = document.getElementById('ynsic-overlay');
+    const video   = document.getElementById('ynsic-video');
+    video.pause();
+    video.src = '';
+    overlay.classList.remove('active');
+}
+
+/* ═══════════════ EASTER EGG 3 — BONZI EXHIBIT → NEBULA BECOMES BONZI ═══════════════ */
+(function() {
+    const _orig = window.openExhibit;
+    window.openExhibit = function(id) {
+        _orig(id);
+        if (id === 'bonzi') {
+            setSprite('secrets/bonzi.png');
+            speak("...What have you done to me.");
+        }
+    };
+
+    const _origClose = window.closeExhibit;
+    window.closeExhibit = function() {
+        _origClose();
+        // Revert back to whatever the current sprite should be
+        setSprite(sprites.neutral);
+    };
+})();
+
+/* ═══════════════ ACHIEVEMENT TRIGGERS — NEBULA ANGER & COFFEE ═══════════════ */
+(function() {
+    const _origPoke = window.pokeNebula;
+    window.pokeNebula = function() {
+        _origPoke();
+        if (isAngry) {
+            unlockAchievement('overflow', '💢', 'OVERFLOW', "You enraged the OS. Only caffeine will calm her.");
+        }
+    };
+
+    const _origCoffee = window.buyCoffee;
+    window.buyCoffee = function() {
+        const wasAngry = isAngry;
+        _origCoffee();
+        if (wasAngry) {
+            setTimeout(() => {
+                unlockAchievement('caffeinated', '☕', 'Caffeinated', "The coffee is burnt, but it will suffice.");
+            }, 800);
+        }
+    };
+})();
+
+/* ═══════════════ ACHIEVEMENT TRIGGER — TYPE "nebania" ON SPLASH ═══════════════ */
+(function() {
+    let buf = '';
+    document.addEventListener('keydown', e => {
+        const splash = document.getElementById('splash');
+        if (!splash || splash.style.display === 'none') { buf = ''; return; }
+        buf = (buf + e.key.toLowerCase()).slice(-7);
+        if (buf === 'nebania') {
+            buf = '';
+            unlockAchievement('screenreader', '👁', 'Screen Reader', "Good job! You read the title.");
+        }
+    });
+})();
 
 /* ═══════════════ CLOCK ═══════════════ */
 setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }, 1000);
