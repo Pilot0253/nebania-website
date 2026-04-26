@@ -663,7 +663,7 @@
         </div>
         <button class="return-btn" onclick="toggleMenu(false)">RETURN TO AREA</button>
         <button class="return-btn leave-btn" onclick="leaveExperience()">LEAVE</button>
-        <div id="overlay-ach-counter">🏆 Achievements <span id="ach-count">0 / 7</span></div>
+        <div id="overlay-ach-counter">🏆 Achievements <span id="ach-count">0 / 6</span></div>
     </div>
 </div>
 
@@ -1467,7 +1467,7 @@ function unlockAchievement(id, icon, title, desc) {
     earnedAchievements.add(id);
 
     // Update counter
-    const total = 7; // increment this if you add more achievements
+    const total = 6; // increment this if you add more achievements
     document.getElementById('ach-count').textContent = `${earnedAchievements.size} / ${total}`;
 
     if (!muteOnStart) {
