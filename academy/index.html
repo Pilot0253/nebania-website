@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="images/nebula_favi.png">
-    <title>Link-Lang Academy — Nebania</title>
+    <title>Chain-Lang Academy — Nebania</title>
     <style>
         :root {
             --nebula-blue: #00a8ff;
@@ -448,8 +448,8 @@
     <div id="beta-modal">
         <div class="modal-stripe"></div>
         <div class="beta-badge">⚠ Beta</div>
-        <h2>Welcome to Link-Lang Academy</h2>
-        <p>This is an early access learning portal for <strong>Link-Lang v0.4</strong>. The language itself is actively under development — some behaviours may change.</p>
+        <h2>Welcome to Chain-Lang Academy</h2>
+        <p>This is an early access learning portal for <strong>Chain-Lang v0.4</strong>. The language itself is actively under development — some behaviours may change.</p>
         <div class="nebula-quote">
             "I am Nebula OS. I will be your instructor. Try not to embarrass yourself."
         </div>
@@ -499,13 +499,13 @@
 <audio id="bg-audio" loop src="audio/academy.mp3"></audio>
 
 <script>
-    // ── DATA (UPDATED TO MATCH LINK-LANG v0.4 REAL SYNTAX) ─────────────────────────
+    // ── DATA (UPDATED TO MATCH Chain-Lang v0.4 REAL SYNTAX) ─────────────────────────
 
     const chapters = [
         {
             tag: "Chapter 1",
             title: "Syntax & Comments",
-            desc: "Link-Lang uses structured blocks with curly braces. Clean, explicit, and far less error-prone than whitespace guessing.",
+            desc: "Chain-Lang uses structured blocks with curly braces. Clean, explicit, and far less error-prone than whitespace guessing.",
             nebulaIntro: "Let’s try this again. Properly this time.",
             nebulaHelp: [
                 "The app keyword MUST use a string name.",
@@ -517,12 +517,12 @@
                     title: "Basic Structure",
                     tag: "syntax",
                     content: `
-                    <p>A Link-Lang script starts with the <code>app</code> keyword, followed by a <strong>string name</strong>. Blocks are defined using <strong>curly braces</strong>.</p>
+                    <p>A Chain-Lang script starts with the <code>app</code> keyword, followed by a <strong>string name</strong>. Blocks are defined using <strong>curly braces</strong>.</p>
 
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
 <pre><span class="kw">app</span> <span class="str">"HelloApp"</span> {
-    <span class="fn">print</span>(<span class="str">"Hello from Link-Lang"</span>)
+    <span class="fn">print</span>(<span class="str">"Hello from Chain-Lang"</span>)
 }</pre>
                     </div>
 
@@ -571,7 +571,7 @@
                     title: "Running a Script",
                     tag: "note",
                     content: `
-                    <p>Run a script using the Link-Lang interpreter:</p>
+                    <p>Run a script using the Chain-Lang interpreter:</p>
 
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
@@ -600,7 +600,7 @@
                     ]
                 },
                 {
-                    q: "How are code blocks defined in Link-Lang?",
+                    q: "How are code blocks defined in Chain-Lang?",
                     options: ["Indentation", "Curly braces {}", "Semicolons", "Tabs only"],
                     answer: 1,
                     feedback: [
@@ -628,7 +628,7 @@
     {
         tag: "Chapter 2",
         title: "Variables",
-        desc: "Link-Lang is dynamically typed. You declare variables with the <code>set</code> keyword and the interpreter figures out the type.",
+        desc: "Chain-Lang is dynamically typed. You declare variables with the <code>set</code> keyword and the interpreter figures out the type.",
         nebulaIntro: "Variables. The building blocks. Pay attention.",
         nebulaHelp: [
             "Use 'set' to declare a variable. Always. No exceptions.",
@@ -640,7 +640,7 @@
                 title: "Declaring Variables",
                 tag: "syntax",
                 content: `
-                    <p>All variables are declared with the <code>set</code> keyword. Link-Lang is <strong>dynamically typed</strong> — you don't specify a type, the runtime handles it.</p>
+                    <p>All variables are declared with the <code>set</code> keyword. Chain-Lang is <strong>dynamically typed</strong> — you don't specify a type, the runtime handles it.</p>
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><span class="kw">set</span> name   <span class="op">=</span> <span class="str">"Nebula"</span>
@@ -659,7 +659,7 @@
                 title: "Supported Types",
                 tag: "syntax",
                 content: `
-                    <p>Link-Lang v0.4 supports the following data types natively:</p>
+                    <p>Chain-Lang v0.4 supports the following data types natively:</p>
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><span class="kw">set</span> myInt    <span class="op">=</span> <span class="num">42</span>          <span class="cmt"># Integer</span>
@@ -704,10 +704,10 @@
         ],
         quiz: [
             {
-                q: "How do you declare a variable in Link-Lang?",
+                q: "How do you declare a variable in Chain-Lang?",
                 options: ["var x = 5", "int x = 5", "set x = 5", "let x = 5"],
                 answer: 2,
-                feedback: ["That's JavaScript.", "That's C/Java. Link-Lang doesn't use type keywords.", "Correct. 'set' is always used for variable declaration.", "That's modern JavaScript. Not used in Link-Lang."]
+                feedback: ["That's JavaScript.", "That's C/Java. Chain-Lang doesn't use type keywords.", "Correct. 'set' is always used for variable declaration.", "That's modern JavaScript. Not used in Chain-Lang."]
             },
             {
                 q: "What is the output of: set x = \"10\"  then  print(int(x) + 5)?",
@@ -716,10 +716,10 @@
                 feedback: ["That would happen without casting — \"10\" + 5 as strings.", "Correct. int(x) converts \"10\" to 10, then adds 5.", "No, int() converts it to an integer first.", "int() handles this cleanly in v0.4."]
             },
             {
-                q: "Which of these is a valid float in Link-Lang?",
+                q: "Which of these is a valid float in Chain-Lang?",
                 options: ["set x = 3,14", "set x = 3.14", "set x = float(3)", "set x = 3f"],
                 answer: 1,
-                feedback: ["Commas aren't decimal points in Link-Lang.", "Correct. Standard dot notation.", "float() is a cast function, not a literal.", "The 'f' suffix isn't part of Link-Lang syntax."]
+                feedback: ["Commas aren't decimal points in Chain-Lang.", "Correct. Standard dot notation.", "float() is a cast function, not a literal.", "The 'f' suffix isn't part of Chain-Lang syntax."]
             }
         ]
     },
@@ -728,7 +728,7 @@
     {
         tag: "Chapter 3",
         title: "Control Flow",
-        desc: "Make decisions in your code using <code>if</code>, <code>elif</code>, and <code>else</code>. Link-Lang supports nested conditions too.",
+        desc: "Make decisions in your code using <code>if</code>, <code>elif</code>, and <code>else</code>. Chain-Lang supports nested conditions too.",
         nebulaIntro: "Decision trees. Think carefully before you branch.",
         nebulaHelp: [
             "The structure is: if condition → body → elif → else. Indentation separates each block.",
@@ -803,7 +803,7 @@
                 q: "What keyword checks a secondary condition if the first if is false?",
                 options: ["else if", "elseif", "elif", "otherwise"],
                 answer: 2,
-                feedback: ["That's JavaScript/C syntax.", "No space, but still not Link-Lang.", "Correct. elif is the keyword.", "Not a Link-Lang keyword."]
+                feedback: ["That's JavaScript/C syntax.", "No space, but still not Chain-Lang.", "Correct. elif is the keyword.", "Not a Chain-Lang keyword."]
             },
             {
                 q: "Given: set x = 75 — which branch runs?\nif x > 90 → A\nelif x > 80 → B\nelif x > 70 → C\nelse → D",
@@ -812,7 +812,7 @@
                 feedback: ["75 is not > 90.", "75 is not > 80.", "75 is > 70. Branch C runs.", "75 matches elif x > 70 before else is reached."]
             },
             {
-                q: "Which comparison operator is NOT available in Link-Lang v0.4?",
+                q: "Which comparison operator is NOT available in Chain-Lang v0.4?",
                 options: [">", "<", "==", "!="],
                 answer: 3,
                 feedback: ["Greater-than is supported.", "Less-than is supported.", "Equality check is supported.", "Correct. != (not-equal) is not yet in v0.4."]
@@ -824,7 +824,7 @@
     {
         tag: "Chapter 4",
         title: "Loops",
-        desc: "Repeat code blocks with <code>for</code> and <code>while</code> loops. Link-Lang also supports <code>break</code> and <code>continue</code>.",
+        desc: "Repeat code blocks with <code>for</code> and <code>while</code> loops. Chain-Lang also supports <code>break</code> and <code>continue</code>.",
         nebulaIntro: "Loops. Repetitive, like your questions will be. Let's begin.",
         nebulaHelp: [
             "while loops run as long as the condition is true. Make sure the condition eventually becomes false.",
@@ -852,7 +852,7 @@
                 title: "for loops",
                 tag: "syntax",
                 content: `
-                    <p>Link-Lang's <code>for</code> loop can iterate over a comma-separated string list, or a numeric <code>range()</code>:</p>
+                    <p>Chain-Lang's <code>for</code> loop can iterate over a comma-separated string list, or a numeric <code>range()</code>:</p>
                     <div class="code-block">
                         <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                         <pre><span class="cmt"># Iterating a list</span>
@@ -917,7 +917,7 @@
                 q: "What does 'continue' do inside a loop?",
                 options: ["Exits the loop entirely", "Restarts the program", "Skips the rest of the current iteration", "Pauses execution"],
                 answer: 2,
-                feedback: ["That's break, not continue.", "No — it only affects the current iteration.", "Correct. continue jumps to the next loop cycle.", "No such pause mechanic in Link-Lang."]
+                feedback: ["That's break, not continue.", "No — it only affects the current iteration.", "Correct. continue jumps to the next loop cycle.", "No such pause mechanic in Chain-Lang."]
             }
         ]
     }
@@ -1144,7 +1144,7 @@ function finishAcademy() {
     document.getElementById('main').innerHTML += `
         <div class="lesson-card" style="text-align:center; margin-top:24px; border-color: rgba(140,198,63,0.5); background: linear-gradient(145deg, rgba(140,198,63,0.1), rgba(255,255,255,0.7));">
             <h2 style="justify-content:center;">🎓 Training Complete</h2>
-            <p>You've completed the Link-Lang Academy beta curriculum. The language is still evolving — check the <a href="https://github.com/Pilot0253/link-lang" target="_blank" style="color:var(--nebula-blue);">GitHub repository</a> for updates.</p>
+            <p>You've completed the Chain-Lang Academy beta curriculum. The language is still evolving — check the <a href="https://github.com/Pilot0253/Chain-Lang" target="_blank" style="color:var(--nebula-blue);">GitHub repository</a> for updates.</p>
             <br>
             <button class="aero-btn btn-green" onclick="window.location.href='../index.html'">Return to Nebania HQ</button>
         </div>
