@@ -659,7 +659,7 @@
             <div class="nav-card" onclick="changeRoom('giftshop')"><h3>🛍️ Gift Shop</h3><p>Take Something</p></div>
             <div class="nav-card" onclick="changeRoom('museum')"><h3>🏛️ The Museum</h3><p>Archives</p></div>
             <div class="nav-card" onclick="changeRoom('vault')"><h3>🔐 Core Vault</h3><p>OS Images</p></div>
-            <div class="nav-card" onclick="handleRedirect('https://nebania.site/academy','Redirecting to Academy...')"><h3>🎓 Nebania Academy</h3><p>Learn Link-Lang</p></div>
+            <div class="nav-card" onclick="handleRedirect('https://nebania.site/academy','Redirecting to Academy...')"><h3>🎓 Nebania Academy</h3><p>Learn Chain-Lang</p></div>
         </div>
         <button class="return-btn" onclick="toggleMenu(false)">RETURN TO AREA</button>
         <button class="return-btn leave-btn" onclick="leaveExperience()">LEAVE</button>
@@ -826,9 +826,9 @@
 // Set enabled: true and fill in your message to show the banner.
 // type: "info" | "warning" | "maintenance"
 const ANNOUNCEMENT = {
-    enabled: true,
-    type: "maintenance",
-    message: "Link-Lang is currently being renamed to Chain-Lang. Certain features may not work."
+    enabled: false,
+    type: "info",
+    message: "Trying to mess with the announcements? Fine."
 };
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -887,7 +887,7 @@ const rooms = {
         trackName: "LEASE", thumb: "audio/leasethumb.png",
         intro: "Welcome to Nebania HQ. Please observe security protocols.",
         actions: `
-        <div class="aero-panel show"><p class="panel-title" style="color:#005ecb;">Link-Lang</p><p class="panel-sub">The scripting engine.</p><button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/link-lang','Accessing Repository...')">View Repo</button><p class="redirect-note">↗ Opens in new window</p></div>
+        <div class="aero-panel show"><p class="panel-title" style="color:#005ecb;">Chain-Lang</p><p class="panel-sub">The scripting engine.</p><button class="aero-btn" onclick="handleRedirect('https://github.com/Pilot0253/chain-lang','Accessing Repository...')">View Repo</button><p class="redirect-note">↗ Opens in new window</p></div>
         <div class="aero-panel show"><p class="panel-title" style="color:#8833bb;">Kotel</p><p class="panel-sub">Package Manager.</p><button class="aero-btn btn-purple" onclick="handleRedirect('https://github.com/tohar777/kotel','Fetching Kotel Data...')">View Repo</button><p class="redirect-note">↗ Opens in new window</p></div>
         <div class="aero-panel show"><p class="panel-title" style="color:#0099cc;">Nebula OS ARM</p><p class="panel-sub">System Images & Source.</p><button class="aero-btn btn-nebula" onclick="changeRoom('vault')">Enter Core Vault</button></div>`
     },
